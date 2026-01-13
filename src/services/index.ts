@@ -5,3 +5,4 @@ export { AllergyService } from './allergy.service';
 export { SymptomService } from './symptom.service';
 export { MealService } from './meal.service';
 export { DocumentService } from './document.service';
+export { UploadService } from './upload.service';

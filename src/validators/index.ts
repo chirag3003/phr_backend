@@ -5,3 +5,4 @@ export * from './allergy.schema';
 export * from './symptom.schema';
 export * from './meal.schema';
 export * from './document.schema';
+export * from './upload.schema';

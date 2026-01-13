@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { StatusCodes } from "http-status-codes";
+import { serveStatic } from "hono/bun";
 // import routes from "./routes";
 import { logger } from "hono/logger";
 import { connectDB } from "./utils/db";
@@ -16,6 +17,9 @@ app.use(logger());
 
 // CORS Middleware
 app.use(cors());
+
+// Static file serving for uploads
+app.use("/uploads/*", serveStatic({ root: "./" }));
 
 // Health check endpoint
 app.get("/health", (c) => {

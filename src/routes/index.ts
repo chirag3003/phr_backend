@@ -5,6 +5,7 @@ import profileRoutes from "./profile.routes";
 import symptomRoutes from "./symptom.routes";
 import mealRoutes from "./meal.routes";
 import documentRoutes from "./document.routes";
+import uploadRoutes from "./upload.routes";
 
 const app = new Hono();
 
@@ -14,5 +15,6 @@ app.route("/profile", profileRoutes);
 app.route("/symptoms", symptomRoutes);
 app.route("/meals", mealRoutes);
 app.route("/documents", documentRoutes);
+app.route("/uploads", uploadRoutes);
 
 export default app;

@@ -6,3 +6,4 @@ export { AllergyController } from './allergy.controller';
 export { SymptomController } from './symptom.controller';
 export { MealController } from './meal.controller';
 export { DocumentController } from './document.controller';
+export { UploadController } from './upload.controller';
