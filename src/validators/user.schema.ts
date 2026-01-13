@@ -5,7 +5,7 @@ export const userSchema = z.object({
   phoneNumber: z.string()
 });
 
-export type UserInput = z.infer<typeof userSchema>;
+export type User = z.infer<typeof userSchema>;
 
 export const userUpdateSchema = userSchema.partial();
 

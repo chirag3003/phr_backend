@@ -17,7 +17,7 @@ export const mealSchema = z.object({
   notes: z.string().max(500).optional(),
 });
 
-export type MealInput = z.infer<typeof mealSchema>;
+export type Meal = z.infer<typeof mealSchema>;
 
 export const mealUpdateSchema = mealSchema.partial();
 

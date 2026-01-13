@@ -10,7 +10,7 @@ export const documentSchema = z.object({
   lastUpdatedAt: z.coerce.date(),
 });
 
-export type DocumentInput = z.infer<typeof documentSchema>;
+export type Document = z.infer<typeof documentSchema>;
 
 export const documentUpdateSchema = documentSchema.partial();
 

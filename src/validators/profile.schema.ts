@@ -13,7 +13,7 @@ export const profileSchema = z.object({
   weight: z.number().min(0).max(500),
 });
 
-export type ProfileInput = z.infer<typeof profileSchema>;
+export type Profile = z.infer<typeof profileSchema>;
 
 export const profileUpdateSchema = profileSchema.partial();
 

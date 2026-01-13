@@ -8,7 +8,7 @@ export const allergySchema = z.object({
   notes: z.string().max(500).optional(),
 });
 
-export type AllergyInput = z.infer<typeof allergySchema>;
+export type Allergy = z.infer<typeof allergySchema>;
 
 export const allergyUpdateSchema = allergySchema.partial();
 

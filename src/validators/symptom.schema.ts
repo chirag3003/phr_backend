@@ -13,7 +13,7 @@ export const symptomSchema = z.object({
   notes: z.string().max(500).optional(),
 });
 
-export type SymptomInput = z.infer<typeof symptomSchema>;
+export type Symptom = z.infer<typeof symptomSchema>;
 
 export const symptomUpdateSchema = symptomSchema.partial();
 
