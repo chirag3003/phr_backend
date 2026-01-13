@@ -10,6 +10,10 @@ export class UserService {
     return await User.findById(id);
   }
 
+  async getUserByPhoneNumber(phoneNumber: string) {
+    return await User.findOne({ phoneNumber });
+  }
+
   async createUser(user: CreateUserInput) {
     return await User.create(user);
   }

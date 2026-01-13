@@ -1,4 +1,5 @@
 // Export all controllers from a single entry point
+export { AuthController } from './auth.controller';
 export { UserController } from './user.controller';
 export { ProfileController } from './profile.controller';
 export { AllergyController } from './allergy.controller';
