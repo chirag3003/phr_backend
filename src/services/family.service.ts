@@ -26,6 +26,30 @@ export class FamilyService {
     return await Family.findByIdAndDelete(id);
   }
 
+  async addMemberToFamily(familyId: string, userId: string) {
+    return await Family.findByIdAndUpdate(
+      familyId,
+      {
+        $push: {
+          members: userId,
+        },
+      },
+      { new: true },
+    );
+  }
+
+  async removeMemberFromFamily(familyId: string, userId: string) {
+    return await Family.findByIdAndUpdate(
+      familyId,
+      {
+        $pull: {
+          members: userId,
+        },
+      },
+      { new: true },
+    );
+  }
+
   async createPermissionEntry(
     familyId: string,
     userId: string,
