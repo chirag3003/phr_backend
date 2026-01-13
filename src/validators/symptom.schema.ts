@@ -15,9 +15,9 @@ export const symptomSchema = z.object({
 
 export type Symptom = z.infer<typeof symptomSchema>;
 
-export const symptomUpdateSchema = symptomSchema.partial();
+export const updateSymptomSchema = symptomSchema.partial();
 
-export type SymptomUpdateInput = z.infer<typeof symptomUpdateSchema>;
+export type SymptomUpdateInput = z.infer<typeof updateSymptomSchema>;
 
 export const createSymptomSchema = symptomSchema.omit({
   userId: true,

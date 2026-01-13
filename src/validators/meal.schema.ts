@@ -19,9 +19,9 @@ export const mealSchema = z.object({
 
 export type Meal = z.infer<typeof mealSchema>;
 
-export const mealUpdateSchema = mealSchema.partial();
+export const updateMealSchema = mealSchema.partial();
 
-export type MealUpdateInput = z.infer<typeof mealUpdateSchema>;
+export type MealUpdateInput = z.infer<typeof updateMealSchema>;
 
 export const createMealSchema = mealSchema.omit({
   userId: true,

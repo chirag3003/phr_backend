@@ -12,9 +12,9 @@ export const documentSchema = z.object({
 
 export type Document = z.infer<typeof documentSchema>;
 
-export const documentUpdateSchema = documentSchema.partial();
+export const updateDocumentSchema = documentSchema.partial();
 
-export type DocumentUpdateInput = z.infer<typeof documentUpdateSchema>;
+export type DocumentUpdateInput = z.infer<typeof updateDocumentSchema>;
 
 export const createDocumentSchema = documentSchema.omit({
   userId: true,

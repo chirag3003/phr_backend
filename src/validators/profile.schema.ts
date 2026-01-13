@@ -15,9 +15,9 @@ export const profileSchema = z.object({
 
 export type Profile = z.infer<typeof profileSchema>;
 
-export const profileUpdateSchema = profileSchema.partial();
+export const updateProfileSchema = profileSchema.partial();
 
-export type ProfileUpdateInput = z.infer<typeof profileUpdateSchema>;
+export type ProfileUpdateInput = z.infer<typeof updateProfileSchema>;
 
 export const createProfileSchema = profileSchema.omit({
   userId: true,
