@@ -10,9 +10,9 @@ export const allergySchema = z.object({
 
 export type Allergy = z.infer<typeof allergySchema>;
 
-export const allergyUpdateSchema = allergySchema.partial();
+export const updateAllergySchema = allergySchema.partial();
 
-export type AllergyUpdateInput = z.infer<typeof allergyUpdateSchema>;
+export type AllergyUpdateInput = z.infer<typeof updateAllergySchema>;
 
 export const createAllergySchema = allergySchema.omit({
   userId: true,
