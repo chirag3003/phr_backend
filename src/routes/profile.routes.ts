@@ -8,7 +8,7 @@ const profileRoutes = new Hono();
 profileRoutes.get("/", authMiddleware, profileController.getProfile);
 profileRoutes.get("/:id", authMiddleware, profileController.getProfileById);
 profileRoutes.post("/", authMiddleware, profileController.createProfile);
-profileRoutes.put("/:id", authMiddleware, profileController.updateProfile);
+profileRoutes.put("/", authMiddleware, profileController.updateProfile);
 profileRoutes.delete("/:id", authMiddleware, profileController.deleteProfile);
 
 export default profileRoutes;

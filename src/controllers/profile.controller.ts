@@ -42,9 +42,9 @@ export class ProfileController {
 
   async updateProfile(ctx: Context) {
     try {
-      const id = ctx.req.param("id");
+      const userId = ctx.get("userId");
       const body = updateProfileSchema.parse(await ctx.req.json());
-      const updatedProfile = await profileService.updateProfile(id, body);
+      const updatedProfile = await profileService.updateProfileByUserId(userId, body);
       return ctx.json(updatedProfile, StatusCodes.OK);
     } catch (err) {
       console.error(err);

@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { StatusCodes } from "http-status-codes";
 import { serveStatic } from "hono/bun";
-// import routes from "./routes";
+import routes from "./routes";
 import { logger } from "hono/logger";
 import { connectDB } from "./utils/db";
 
@@ -27,7 +27,7 @@ app.get("/health", (c) => {
 });
 
 // API Routes
-// app.route("/", routes)
+app.route("/", routes)
 
 // 404 Handler
 app.notFound((c) => {
