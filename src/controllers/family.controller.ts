@@ -72,7 +72,27 @@ export class FamilyController {
     try {
       const familyId = ctx.req.param("id");
       const { userId } = await ctx.req.json();
+      
+      // Get current family to find existing members
+      const family = await familyService.getFamilyById(familyId);
+      if (!family) {
+        return ctx.json({ error: "Family not found" }, StatusCodes.NOT_FOUND);
+      }
+
+      // Add member to family
       const updatedFamily = await familyService.addMemberToFamily(familyId, userId);
+
+      // Create permission entries: new member -> all existing members (including admin)
+      const allExistingMembers = [family.admin.toString(), ...family.members.map((m: any) => m.toString())];
+      for (const existingMemberId of allExistingMembers) {
+        await familyService.createPermissionEntry(familyId, userId, existingMemberId);
+      }
+
+      // Create permission entries: all existing members -> new member
+      for (const existingMemberId of allExistingMembers) {
+        await familyService.createPermissionEntry(familyId, existingMemberId, userId);
+      }
+
       return ctx.json(updatedFamily, StatusCodes.OK);
     } catch (err) {
       console.error(err);
@@ -84,7 +104,16 @@ export class FamilyController {
     try {
       const familyId = ctx.req.param("id");
       const { userId } = await ctx.req.json();
-      await familyService.deletePermissionEntry(userId, familyId, userId);
+
+      // Get current family to find all members
+      const family = await familyService.getFamilyById(familyId);
+      if (!family) {
+        return ctx.json({ error: "Family not found" }, StatusCodes.NOT_FOUND);
+      }
+
+      // Delete all permission entries where this user is the grantor (userId)
+      await familyService.deletePermissionsByUserId(familyId, userId);
+
       const updatedFamily = await familyService.removeMemberFromFamily(familyId, userId);
       return ctx.json(updatedFamily, StatusCodes.OK);
     } catch (err) {

@@ -104,6 +104,13 @@ export class FamilyService {
     });
   }
 
+  async deletePermissionsByUserId(family: string, userId: string) {
+    return await FamilyPermission.deleteMany({
+      family,
+      $or: [{ userId }, { permissionTo: userId }],
+    });
+  }
+
   async deleteFamilyPermissions(familyId: string) {
     return await FamilyPermission.deleteMany({
       family: familyId,
