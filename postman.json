@@ -635,6 +635,34 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Create Meal From Image (AI Analysis)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/meals/analyze",
+              "host": ["{{baseUrl}}"],
+              "path": ["meals", "analyze"]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -911,6 +939,323 @@
               "raw": "{{baseUrl}}/uploads/:id",
               "host": ["{{baseUrl}}"],
               "path": ["uploads", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Family",
+      "item": [
+        {
+          "name": "Get My Families",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/family",
+              "host": ["{{baseUrl}}"],
+              "path": ["family"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Family By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/family/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["family", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Family",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"My Family\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/family",
+              "host": ["{{baseUrl}}"],
+              "path": ["family"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Family",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Family Name\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/family/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["family", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Family",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/family/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["family", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Member To Family",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"member_user_id_here\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/family/:id/members",
+              "host": ["{{baseUrl}}"],
+              "path": ["family", ":id", "members"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Member From Family",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"member_user_id_here\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/family/:id/members",
+              "host": ["{{baseUrl}}"],
+              "path": ["family", ":id", "members"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Permission Entry",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/family/:id/permissions?permissionTo=target_user_id",
+              "host": ["{{baseUrl}}"],
+              "path": ["family", ":id", "permissions"],
+              "query": [
+                {
+                  "key": "permissionTo",
+                  "value": "target_user_id"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Permission Entry",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"permissionTo\": \"target_user_id\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/family/:id/permissions",
+              "host": ["{{baseUrl}}"],
+              "path": ["family", ":id", "permissions"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Permission Entry",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"permissionTo\": \"target_user_id\",\n  \"write\": true,\n  \"permissions\": {\n    \"documents\": true,\n    \"symptoms\": true,\n    \"meals\": true,\n    \"trends\": false\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/family/:id/permissions",
+              "host": ["{{baseUrl}}"],
+              "path": ["family", ":id", "permissions"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Permission Entry",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/family/:id/permissions?permissionTo=target_user_id",
+              "host": ["{{baseUrl}}"],
+              "path": ["family", ":id", "permissions"],
+              "query": [
+                {
+                  "key": "permissionTo",
+                  "value": "target_user_id"
+                }
+              ],
               "variable": [
                 {
                   "key": "id",
