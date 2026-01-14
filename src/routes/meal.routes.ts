@@ -10,6 +10,7 @@ mealRoutes.get("/type", authMiddleware, mealController.getMealsByType);
 mealRoutes.get("/range", authMiddleware, mealController.getMealsByDateRange);
 mealRoutes.get("/:id", authMiddleware, mealController.getMealById);
 mealRoutes.post("/", authMiddleware, mealController.createMeal);
+mealRoutes.post("/analyze", authMiddleware, mealController.createMealFromImage);
 mealRoutes.put("/:id", authMiddleware, mealController.updateMeal);
 mealRoutes.delete("/:id", authMiddleware, mealController.deleteMeal);
 
