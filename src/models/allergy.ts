@@ -24,7 +24,7 @@ const allergySchema = new Schema<IAllergy>(
     severity: {
       type: String,
       required: true,
-      enum: ['Low', 'Medium', 'High'],
+      enum: ['Low', 'Medium', 'Moderate', 'High'],
     },
     notes: {
       type: String,
