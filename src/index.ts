@@ -21,9 +21,13 @@ app.use(cors());
 // Static file serving for uploads
 app.use("/uploads/*", serveStatic({ root: "./" }));
 
+app.get("/", (c) => {
+  return c.json({ message: "Welcome to the PHR API" });
+});
+
 // Health check endpoint
 app.get("/health", (c) => {
-  return c.json({ status: "ok", service: "Rentals-Backend" });
+  return c.json({ status: "ok", service: "PHR-Backend" });
 });
 
 // API Routes
