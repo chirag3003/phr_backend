@@ -8,7 +8,8 @@ const allergyRoutes = new Hono()
 
 allergyRoutes.get("/", authMiddleware, allergyController.getAllergies);
 allergyRoutes.get("/:id", authMiddleware, allergyController.getAllergyById);
-allergyRoutes.post("/", authMiddleware,  allergyController.createAllergy);
+allergyRoutes.post("/", authMiddleware, allergyController.createAllergy);
 allergyRoutes.put("/:id", authMiddleware, allergyController.updateAllergy);
+allergyRoutes.delete("/:id", authMiddleware, allergyController.deleteAllergy);
 
 export default allergyRoutes;

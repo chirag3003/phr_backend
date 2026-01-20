@@ -50,4 +50,15 @@ export class AllergyController {
       return ctx.json({}, StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
+
+  async deleteAllergy(ctx: Context) {
+    try {
+      const id = ctx.req.param("id");
+      const deletedAllergy = await allergyService.deleteAllergy(id);
+      return ctx.json(deletedAllergy, StatusCodes.OK);
+    } catch (err) {
+      console.error(err);
+      return ctx.json({}, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
 }
