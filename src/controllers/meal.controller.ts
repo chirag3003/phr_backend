@@ -117,7 +117,8 @@ export class MealController {
       const mealAnalysis = await analyzeMealImage(base64, file.type);
 
       // Upload the image to get a URL
-      const baseUrl = new URL(ctx.req.url).origin;
+      // const baseUrl = new URL(ctx.req.url).origin;
+      const baseUrl = "https://phr.chirag.codes"
       const uploadResult = await uploadService.uploadFile(userId, file, baseUrl);
 
       // Create the meal with analyzed data
