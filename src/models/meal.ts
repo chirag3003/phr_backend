@@ -51,16 +51,19 @@ const mealSchema = new Schema<IMeal>(
     protein: {
       type: Number,
       required: true,
+      default: 0,
       min: 0,
     },
     carbs: {
       type: Number,
       required: true,
+      default: 0,
       min: 0,
     },
     fiber: {
       type: Number,
       required: true,
+      default: 0,
       min: 0,
     },
     dateRecorded: {

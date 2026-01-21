@@ -6,15 +6,15 @@ export const mealSchema = z.object({
   name: z.string().min(1).max(100),
   detail: z.string().max(500).optional(),
   type: z.enum(['Breakfast', 'Lunch', 'Dinner', 'Snack']),
-  mealImage: z.string().url().optional(),
-  calories: z.number().min(0),
-  protein: z.number().min(0),
-  carbs: z.number().min(0),
-  fiber: z.number().min(0),
+  mealImage: z.string().optional(),
+  calories: z.number().min(0).default(0),
+  protein: z.number().min(0).default(0),
+  carbs: z.number().min(0).default(0),
+  fiber: z.number().min(0).default(0),
   dateRecorded: z.coerce.date(),
   time: z.string().min(1).max(10),
   addedBy: z.string().min(1).max(100),
-  notes: z.string().max(500).optional(),
+  notes: z.string().max(500).nullable().optional(),
 });
 
 export type Meal = z.infer<typeof mealSchema>;
