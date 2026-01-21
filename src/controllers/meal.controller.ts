@@ -1,7 +1,7 @@
 import type { Context } from "hono";
 import { MealService, UploadService } from "../services";
 import { StatusCodes } from "http-status-codes";
-import { createMealSchema, updateMealSchema } from "../validators";
+import { createMealSchema, updateMealSchema, type Meal } from "../validators";
 import { analyzeMealImage } from "../lib/openai";
 
 const mealService = new MealService();
@@ -125,7 +125,16 @@ export class MealController {
       const mealData = {
         name: mealAnalysis.name,
         detail: mealAnalysis.detail || "",
-        type: mealAnalysis.type,
+        type:
+          now.getHours() < 11
+            ? "Breakfast"
+            : now.getHours() < 14
+              ? "Lunch"
+              : now.getHours() < 17
+                ? "Snack"
+                : now.getHours() < 21
+                  ? "Dinner"
+                  : "Snack" as Meal["type"],
         mealImage: uploadResult.url,
         calories: mealAnalysis.calories,
         protein: mealAnalysis.protein,
