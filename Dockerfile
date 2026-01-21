@@ -2,6 +2,10 @@
 FROM oven/bun:1 AS base
 WORKDIR /app
 
+# Set timezone to Indian Standard Time
+ENV TZ=Asia/Kolkata
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 # Install dependencies
 FROM base AS install
 COPY package.json bun.lock* ./
