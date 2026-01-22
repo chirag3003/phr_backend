@@ -1267,6 +1267,233 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Glucose",
+      "item": [
+        {
+          "name": "Get All Glucose Readings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/glucose",
+              "host": ["{{baseUrl}}"],
+              "path": ["glucose"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Latest Glucose Reading",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/glucose/latest",
+              "host": ["{{baseUrl}}"],
+              "path": ["glucose", "latest"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Glucose By Date Range",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/glucose/range?startDate=2025-01-01&endDate=2025-12-31",
+              "host": ["{{baseUrl}}"],
+              "path": ["glucose", "range"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2025-01-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2025-12-31"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Glucose By Meal Context",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/glucose/context?mealContext=Fasting",
+              "host": ["{{baseUrl}}"],
+              "path": ["glucose", "context"],
+              "query": [
+                {
+                  "key": "mealContext",
+                  "value": "Fasting"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Glucose Statistics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/glucose/stats?startDate=2025-01-01&endDate=2025-12-31",
+              "host": ["{{baseUrl}}"],
+              "path": ["glucose", "stats"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2025-01-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2025-12-31"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Glucose By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/glucose/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["glucose", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Glucose Reading",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"value\": 110,\n  \"unit\": \"mg/dL\",\n  \"dateRecorded\": \"2026-01-22\",\n  \"time\": {\n    \"hour\": 8,\n    \"minute\": 30\n  },\n  \"mealContext\": \"Fasting\",\n  \"notes\": \"Morning reading before breakfast\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/glucose",
+              "host": ["{{baseUrl}}"],
+              "path": ["glucose"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Glucose Reading",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"value\": 115,\n  \"notes\": \"Updated reading\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/glucose/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["glucose", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Glucose Reading",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/glucose/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["glucose", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ]
 }

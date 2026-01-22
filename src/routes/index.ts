@@ -7,6 +7,7 @@ import mealRoutes from "./meal.routes";
 import documentRoutes from "./document.routes";
 import uploadRoutes from "./upload.routes";
 import familyRoutes from "./family.routes";
+import glucoseRoutes from "./glucose.routes";
 
 const app = new Hono();
 
@@ -18,5 +19,6 @@ app.route("/meals", mealRoutes);
 app.route("/documents", documentRoutes);
 app.route("/uploads", uploadRoutes);
 app.route("/family", familyRoutes);
+app.route("/glucose", glucoseRoutes);
 
 export default app;
