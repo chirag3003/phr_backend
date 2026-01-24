@@ -126,7 +126,7 @@ Return ONLY valid JSON with this exact structure:
   "summary": "Brief overall summary of meal patterns and health status"
 }
 
-Provide 3-5 insights and 3-5 tips. Focus on:
+Provide max 3 insights and max 3 tips and return empty array if nothing is found. Focus on:
 - Carbohydrate patterns and their impact on blood sugar
 - Protein and fiber intake for blood sugar stability
 - Meal timing patterns
@@ -237,7 +237,7 @@ Return ONLY valid JSON with this exact structure:
   "summary": "Brief overall summary of glucose control status"
 }
 
-Provide 3-5 insights, 2-4 patterns, and 3-5 tips. Focus on:
+Provide max 2 insights, max 2 patterns, and max 2 tips. Focus on:
 - Time of day patterns (morning highs, overnight lows, etc.)
 - Meal-related glucose spikes and their timing
 - Hypoglycemia or hyperglycemia episodes
