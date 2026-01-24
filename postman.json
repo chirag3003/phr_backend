@@ -1494,6 +1494,47 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Insights",
+      "item": [
+        {
+          "name": "Get Meal Insights",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/insights/meals",
+              "host": ["{{baseUrl}}"],
+              "path": ["insights", "meals"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Glucose Insights",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/insights/glucose",
+              "host": ["{{baseUrl}}"],
+              "path": ["insights", "glucose"]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ]
 }
