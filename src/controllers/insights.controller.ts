@@ -1,8 +1,10 @@
 import { Context } from "hono";
 import { StatusCodes } from "http-status-codes";
-import { insightsService } from "../services/insights.service";
+import { InsightsService } from "../services/insights.service";
 
-export const insightsController = {
+const insightsService = new InsightsService();
+
+export class InsightsController {
   async getMealInsights(ctx: Context) {
     try {
       const userId = ctx.get("userId");
@@ -15,7 +17,7 @@ export const insightsController = {
         StatusCodes.INTERNAL_SERVER_ERROR
       );
     }
-  },
+  }
 
   async getGlucoseInsights(ctx: Context) {
     try {
@@ -29,5 +31,5 @@ export const insightsController = {
         StatusCodes.INTERNAL_SERVER_ERROR
       );
     }
-  },
-};
+  }
+}

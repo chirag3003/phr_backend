@@ -68,4 +68,4 @@ const glucoseSchema = new Schema<IGlucose>(
 // Index for efficient querying by user and date
 glucoseSchema.index({ userId: 1, dateRecorded: -1 });
 
-export const Glucose = mongoose.model<IGlucose>("Glucose", glucoseSchema);
+export default mongoose.model<IGlucose>("Glucose", glucoseSchema);

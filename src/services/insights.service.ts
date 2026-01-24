@@ -2,42 +2,53 @@ import { ProfileService } from "./profile.service";
 import { AllergyService } from "./allergy.service";
 import { MealService } from "./meal.service";
 import { SymptomService } from "./symptom.service";
-import { glucoseService } from "./glucose.service";
-import { generateMealInsights, generateGlucoseInsights, MealInsights, GlucoseInsights } from "../lib/insights";
+import { GlucoseService } from "./glucose.service";
+import { generateMealInsights, generateGlucoseInsights } from "../lib/insights";
+import type { MealInsightsResponse, GlucoseInsightsResponse, UserDataForInsights } from "../validators";
 
-const profileService = new ProfileService();
-const allergyService = new AllergyService();
-const mealService = new MealService();
-const symptomService = new SymptomService();
+export class InsightsService {
+  private profileService: ProfileService;
+  private allergyService: AllergyService;
+  private mealService: MealService;
+  private symptomService: SymptomService;
+  private glucoseService: GlucoseService;
 
-export const insightsService = {
-  async getMealInsights(userId: string): Promise<MealInsights> {
-    // Gather all user data in parallel
+  constructor() {
+    this.profileService = new ProfileService();
+    this.allergyService = new AllergyService();
+    this.mealService = new MealService();
+    this.symptomService = new SymptomService();
+    this.glucoseService = new GlucoseService();
+  }
+
+  private async gatherUserData(userId: string): Promise<UserDataForInsights> {
     const [profile, allergies, meals, symptoms, glucoseReadings] = await Promise.all([
-      profileService.getProfile(userId),
-      allergyService.getAllergies(userId),
-      mealService.getMeals(userId),
-      symptomService.getSymptoms(userId),
-      glucoseService.findAll(userId),
+      this.profileService.getProfile(userId),
+      this.allergyService.getAllergies(userId),
+      this.mealService.getMeals(userId),
+      this.symptomService.getSymptoms(userId),
+      this.glucoseService.getGlucoseReadings(userId),
     ]);
 
-    const userData = {
-      profile: profile ? {
-        firstName: profile.firstName,
-        lastName: profile.lastName,
-        dob: profile.dob,
-        sex: profile.sex,
-        diabetesType: profile.diabetesType,
-        bloodType: profile.bloodType,
-        height: profile.height,
-        weight: profile.weight,
-      } : null,
-      allergies: allergies.map(a => ({
+    return {
+      profile: profile
+        ? {
+            firstName: profile.firstName,
+            lastName: profile.lastName,
+            dob: profile.dob,
+            sex: profile.sex,
+            diabetesType: profile.diabetesType,
+            bloodType: profile.bloodType,
+            height: profile.height,
+            weight: profile.weight,
+          }
+        : null,
+      allergies: allergies.map((a) => ({
         name: a.name,
         severity: a.severity,
         notes: a.notes,
       })),
-      meals: meals.map(m => ({
+      meals: meals.map((m) => ({
         name: m.name,
         type: m.type,
         calories: m.calories,
@@ -47,14 +58,14 @@ export const insightsService = {
         dateRecorded: m.dateRecorded,
         time: m.time,
       })),
-      symptoms: symptoms.map(s => ({
+      symptoms: symptoms.map((s) => ({
         symptomName: s.symptomName,
         intensity: s.intensity,
         dateRecorded: s.dateRecorded,
         time: s.time,
         notes: s.notes,
       })),
-      glucoseReadings: glucoseReadings.map(g => ({
+      glucoseReadings: glucoseReadings.map((g) => ({
         value: g.value,
         unit: g.unit,
         dateRecorded: g.dateRecorded,
@@ -63,63 +74,15 @@ export const insightsService = {
         notes: g.notes,
       })),
     };
+  }
 
+  async getMealInsights(userId: string): Promise<MealInsightsResponse> {
+    const userData = await this.gatherUserData(userId);
     return generateMealInsights(userData);
-  },
+  }
 
-  async getGlucoseInsights(userId: string): Promise<GlucoseInsights> {
-    // Gather all user data in parallel
-    const [profile, allergies, meals, symptoms, glucoseReadings] = await Promise.all([
-      profileService.getProfile(userId),
-      allergyService.getAllergies(userId),
-      mealService.getMeals(userId),
-      symptomService.getSymptoms(userId),
-      glucoseService.findAll(userId),
-    ]);
-
-    const userData = {
-      profile: profile ? {
-        firstName: profile.firstName,
-        lastName: profile.lastName,
-        dob: profile.dob,
-        sex: profile.sex,
-        diabetesType: profile.diabetesType,
-        bloodType: profile.bloodType,
-        height: profile.height,
-        weight: profile.weight,
-      } : null,
-      allergies: allergies.map(a => ({
-        name: a.name,
-        severity: a.severity,
-        notes: a.notes,
-      })),
-      meals: meals.map(m => ({
-        name: m.name,
-        type: m.type,
-        calories: m.calories,
-        protein: m.protein,
-        carbs: m.carbs,
-        fiber: m.fiber,
-        dateRecorded: m.dateRecorded,
-        time: m.time,
-      })),
-      symptoms: symptoms.map(s => ({
-        symptomName: s.symptomName,
-        intensity: s.intensity,
-        dateRecorded: s.dateRecorded,
-        time: s.time,
-        notes: s.notes,
-      })),
-      glucoseReadings: glucoseReadings.map(g => ({
-        value: g.value,
-        unit: g.unit,
-        dateRecorded: g.dateRecorded,
-        time: g.time,
-        mealContext: g.mealContext,
-        notes: g.notes,
-      })),
-    };
-
+  async getGlucoseInsights(userId: string): Promise<GlucoseInsightsResponse> {
+    const userData = await this.gatherUserData(userId);
     return generateGlucoseInsights(userData);
-  },
-};
+  }
+}
