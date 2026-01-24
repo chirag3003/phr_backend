@@ -131,9 +131,9 @@ export class MealController {
             ? "Breakfast"
             : now.getHours() < 14
               ? "Lunch"
-              : now.getHours() < 17
+              : now.getHours() < 19
                 ? "Snack"
-                : now.getHours() < 21
+                : now.getHours() < 23
                   ? "Dinner"
                   : "Snack" as Meal["type"],
         mealImage: uploadResult.url,
