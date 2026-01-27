@@ -8,7 +8,7 @@ const docDoctorService = new DocDoctorService();
 export class DocDoctorController {
   async getDocDoctorsByUserId(ctx: Context) {
     try {
-      const userId = ctx.req.param("userId");
+      const userId = ctx.get("userId");
       const docDoctors = await docDoctorService.getDocDoctorsByUserId(userId);
       return ctx.json(docDoctors, StatusCodes.OK);
     } catch (err) {
