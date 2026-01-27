@@ -7,6 +7,11 @@ const documentRoutes = new Hono();
 
 documentRoutes.get("/", authMiddleware, documentController.getDocuments);
 documentRoutes.get("/type", authMiddleware, documentController.getDocumentsByType);
+documentRoutes.get(
+  "/doctor/:docDoctorId",
+  authMiddleware,
+  documentController.getDocumentsByDoctor,
+);
 documentRoutes.get("/:id", authMiddleware, documentController.getDocumentById);
 documentRoutes.post("/", authMiddleware, documentController.createDocument);
 documentRoutes.put("/:id", authMiddleware, documentController.updateDocument);

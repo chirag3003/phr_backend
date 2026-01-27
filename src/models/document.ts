@@ -2,11 +2,15 @@ import mongoose, { Schema, Document } from "mongoose";
 
 export interface IDocument extends Document {
   userId: mongoose.Types.ObjectId;
-  title: string;
-  documentType: string;
+  documentType: "Prescription" | "Report";
+  // For Prescriptions - reference to the doctor
+  docDoctorId?: mongoose.Types.ObjectId;
+  // For Reports - title of the report
+  title?: string;
+  // Common fields
+  date: Date;
   fileUrl: string;
   fileSize?: string;
-  lastUpdatedAt: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -18,15 +22,28 @@ const documentSchema = new Schema<IDocument>(
       ref: "User",
       required: true,
     },
-    title: {
-      type: String,
-      required: true,
-      trim: true,
-    },
     documentType: {
       type: String,
       required: true,
-      enum: ["Prescription", "Report", "LabResult", "Other"],
+      enum: ["Prescription", "Report"],
+    },
+    docDoctorId: {
+      type: Schema.Types.ObjectId,
+      ref: "DocDoctor",
+      required: function (this: IDocument) {
+        return this.documentType === "Prescription";
+      },
+    },
+    title: {
+      type: String,
+      trim: true,
+      required: function (this: IDocument) {
+        return this.documentType === "Report";
+      },
+    },
+    date: {
+      type: Date,
+      required: true,
     },
     fileUrl: {
       type: String,
@@ -37,10 +54,6 @@ const documentSchema = new Schema<IDocument>(
       type: String,
       trim: true,
     },
-    lastUpdatedAt: {
-      type: Date,
-      required: true,
-    },
   },
   {
     timestamps: true,
@@ -49,6 +62,7 @@ const documentSchema = new Schema<IDocument>(
 
 // Index for efficient user-based and type-based queries
 documentSchema.index({ userId: 1, documentType: 1 });
-documentSchema.index({ userId: 1, lastUpdatedAt: -1 });
+documentSchema.index({ userId: 1, date: -1 });
+documentSchema.index({ userId: 1, docDoctorId: 1 });
 
 export default mongoose.model<IDocument>("Document", documentSchema);
