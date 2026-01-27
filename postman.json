@@ -896,17 +896,37 @@
             "method": "POST",
             "header": [
               {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
                 "key": "Authorization",
                 "value": "Bearer {{token}}"
               }
             ],
             "body": {
-              "mode": "raw",
-              "raw": "{\n  \"documentType\": \"Prescription\",\n  \"docDoctorId\": \"doctor_id_here\",\n  \"date\": \"2026-01-27\",\n  \"fileUrl\": \"https://example.com/files/prescription.pdf\",\n  \"fileSize\": \"2.5MB\"\n}"
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "",
+                  "description": "The prescription document file (PDF, image, etc.)"
+                },
+                {
+                  "key": "documentType",
+                  "value": "Prescription",
+                  "type": "text"
+                },
+                {
+                  "key": "docDoctorId",
+                  "value": "doctor_id_here",
+                  "type": "text",
+                  "description": "The ObjectId of the prescribing doctor"
+                },
+                {
+                  "key": "date",
+                  "value": "2026-01-27",
+                  "type": "text",
+                  "description": "Date of the prescription"
+                }
+              ]
             },
             "url": {
               "raw": "{{baseUrl}}/documents",
@@ -922,17 +942,37 @@
             "method": "POST",
             "header": [
               {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
                 "key": "Authorization",
                 "value": "Bearer {{token}}"
               }
             ],
             "body": {
-              "mode": "raw",
-              "raw": "{\n  \"documentType\": \"Report\",\n  \"title\": \"Blood Test Results\",\n  \"date\": \"2026-01-27\",\n  \"fileUrl\": \"https://example.com/files/blood-test.pdf\",\n  \"fileSize\": \"1.2MB\"\n}"
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "",
+                  "description": "The report document file (PDF, image, etc.)"
+                },
+                {
+                  "key": "documentType",
+                  "value": "Report",
+                  "type": "text"
+                },
+                {
+                  "key": "title",
+                  "value": "Blood Test Results",
+                  "type": "text",
+                  "description": "Title of the report (1-200 characters)"
+                },
+                {
+                  "key": "date",
+                  "value": "2026-01-27",
+                  "type": "text",
+                  "description": "Date of the report"
+                }
+              ]
             },
             "url": {
               "raw": "{{baseUrl}}/documents",
@@ -958,7 +998,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"date\": \"2026-01-28\",\n  \"fileUrl\": \"https://example.com/files/updated-document.pdf\"\n}"
+              "raw": "{\n  \"date\": \"2026-01-28\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/documents/:id",

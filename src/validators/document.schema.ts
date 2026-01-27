@@ -19,24 +19,20 @@ export const documentSchema = z.object({
 
 export type Document = z.infer<typeof documentSchema>;
 
-// Create schema for Prescription
+// Create schema for Prescription (file uploaded separately, fileUrl set by controller)
 export const createPrescriptionSchema = z.object({
   documentType: z.literal("Prescription"),
   docDoctorId: objectIdSchema,
   date: z.coerce.date(),
-  fileUrl: z.string().url(),
-  fileSize: z.string().max(20).optional(),
 });
 
 export type CreatePrescriptionInput = z.infer<typeof createPrescriptionSchema>;
 
-// Create schema for Report
+// Create schema for Report (file uploaded separately, fileUrl set by controller)
 export const createReportSchema = z.object({
   documentType: z.literal("Report"),
   title: z.string().min(1).max(200),
   date: z.coerce.date(),
-  fileUrl: z.string().url(),
-  fileSize: z.string().max(20).optional(),
 });
 
 export type CreateReportInput = z.infer<typeof createReportSchema>;

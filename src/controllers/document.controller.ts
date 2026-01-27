@@ -1,9 +1,10 @@
 import type { Context } from "hono";
-import { DocumentService } from "../services";
+import { DocumentService, UploadService } from "../services";
 import { StatusCodes } from "http-status-codes";
 import { createDocumentSchema, updateDocumentSchema } from "../validators";
 
 const documentService = new DocumentService();
+const uploadService = new UploadService();
 
 export class DocumentController {
   async getDocuments(ctx: Context) {
@@ -85,12 +86,53 @@ export class DocumentController {
   async createDocument(ctx: Context) {
     try {
       const userId = ctx.get("userId");
-      const body = createDocumentSchema.parse(await ctx.req.json());
-      const createdDocument = await documentService.createDocument(userId, body);
+      const formData = await ctx.req.formData();
+
+      // Get the file
+      const file = formData.get("file") as File | null;
+      if (!file) {
+        return ctx.json(
+          { error: "File is required" },
+          StatusCodes.BAD_REQUEST,
+        );
+      }
+
+      // Parse document data from form
+      const documentType = formData.get("documentType") as string;
+      const date = formData.get("date") as string;
+      const docDoctorId = formData.get("docDoctorId") as string | null;
+      const title = formData.get("title") as string | null;
+
+      // Build the data object based on document type
+      const documentData: Record<string, unknown> = { documentType, date };
+      if (documentType === "Prescription" && docDoctorId) {
+        documentData.docDoctorId = docDoctorId;
+      }
+      if (documentType === "Report" && title) {
+        documentData.title = title;
+      }
+
+      // Validate the document data
+      const validatedData = createDocumentSchema.parse(documentData);
+
+      // Upload the file
+      const baseUrl = new URL(ctx.req.url).origin;
+      const uploadResult = await uploadService.uploadFile(userId, file, baseUrl);
+
+      // Create document with file URL and size
+      const createdDocument = await documentService.createDocument(userId, {
+        ...validatedData,
+        fileUrl: uploadResult.url,
+        fileSize: formatFileSize(uploadResult.size),
+      });
+
       return ctx.json(createdDocument, StatusCodes.CREATED);
     } catch (err) {
       console.error(err);
-      return ctx.json({}, StatusCodes.INTERNAL_SERVER_ERROR);
+      return ctx.json(
+        { error: err instanceof Error ? err.message : "Internal server error" },
+        StatusCodes.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -128,4 +170,11 @@ export class DocumentController {
       return ctx.json({}, StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
+}
+
+// Helper function to format file size
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes}B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)}KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)}MB`;
 }
