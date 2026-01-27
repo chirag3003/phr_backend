@@ -667,6 +667,135 @@
       ]
     },
     {
+      "name": "DocDoctors",
+      "item": [
+        {
+          "name": "Get All Doctors",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/docDoctors",
+              "host": ["{{baseUrl}}"],
+              "path": ["docDoctors"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Doctor By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/docDoctors/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["docDoctors", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Doctor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dr. John Smith\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/docDoctors",
+              "host": ["{{baseUrl}}"],
+              "path": ["docDoctors"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Doctor",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dr. John A. Smith\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/docDoctors/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["docDoctors", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Doctor",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/docDoctors/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["docDoctors", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Documents",
       "item": [
         {
@@ -728,7 +857,8 @@
               "query": [
                 {
                   "key": "documentType",
-                  "value": "Prescription"
+                  "value": "Prescription",
+                  "description": "Prescription or Report"
                 }
               ]
             }
@@ -736,7 +866,32 @@
           "response": []
         },
         {
-          "name": "Create Document",
+          "name": "Get Documents By Doctor",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/documents/doctor/:docDoctorId",
+              "host": ["{{baseUrl}}"],
+              "path": ["documents", "doctor", ":docDoctorId"],
+              "variable": [
+                {
+                  "key": "docDoctorId",
+                  "value": "",
+                  "description": "Doctor ID to get prescriptions for"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Prescription",
           "request": {
             "method": "POST",
             "header": [
@@ -751,7 +906,33 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Dr. Smith Prescription\",\n  \"documentType\": \"Prescription\",\n  \"fileUrl\": \"https://example.com/files/prescription.pdf\",\n  \"fileSize\": \"2.5MB\",\n  \"lastUpdatedAt\": \"2025-12-15\"\n}"
+              "raw": "{\n  \"documentType\": \"Prescription\",\n  \"docDoctorId\": \"doctor_id_here\",\n  \"date\": \"2026-01-27\",\n  \"fileUrl\": \"https://example.com/files/prescription.pdf\",\n  \"fileSize\": \"2.5MB\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/documents",
+              "host": ["{{baseUrl}}"],
+              "path": ["documents"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Report",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"Report\",\n  \"title\": \"Blood Test Results\",\n  \"date\": \"2026-01-27\",\n  \"fileUrl\": \"https://example.com/files/blood-test.pdf\",\n  \"fileSize\": \"1.2MB\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/documents",
@@ -777,7 +958,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Dr. Smith Updated Prescription\",\n  \"lastUpdatedAt\": \"2025-12-20\"\n}"
+              "raw": "{\n  \"date\": \"2026-01-28\",\n  \"fileUrl\": \"https://example.com/files/updated-document.pdf\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/documents/:id",
