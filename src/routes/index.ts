@@ -9,6 +9,7 @@ import uploadRoutes from "./upload.routes";
 import familyRoutes from "./family.routes";
 import glucoseRoutes from "./glucose.routes";
 import insightsRoutes from "./insights.routes";
+import docDoctorRoutes from "./docDoctor.routes";
 
 const app = new Hono();
 
@@ -22,5 +23,6 @@ app.route("/uploads", uploadRoutes);
 app.route("/family", familyRoutes);
 app.route("/glucose", glucoseRoutes);
 app.route("/insights", insightsRoutes);
+app.route("/docDoctors", docDoctorRoutes);
 
 export default app;

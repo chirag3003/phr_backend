@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document } from "mongoose";
 
 export interface IDocument extends Document {
   userId: mongoose.Types.ObjectId;
@@ -15,7 +15,7 @@ const documentSchema = new Schema<IDocument>(
   {
     userId: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
     title: {
@@ -26,7 +26,7 @@ const documentSchema = new Schema<IDocument>(
     documentType: {
       type: String,
       required: true,
-      enum: ['Prescription', 'Report', 'LabResult', 'Other'],
+      enum: ["Prescription", "Report", "LabResult", "Other"],
     },
     fileUrl: {
       type: String,
@@ -44,11 +44,11 @@ const documentSchema = new Schema<IDocument>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // Index for efficient user-based and type-based queries
 documentSchema.index({ userId: 1, documentType: 1 });
 documentSchema.index({ userId: 1, lastUpdatedAt: -1 });
 
-export default mongoose.model<IDocument>('Document', documentSchema);
+export default mongoose.model<IDocument>("Document", documentSchema);
