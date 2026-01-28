@@ -116,7 +116,8 @@ export class DocumentController {
       const validatedData = createDocumentSchema.parse(documentData);
 
       // Upload the file
-      const baseUrl = new URL(ctx.req.url).origin;
+      // const baseUrl = new URL(ctx.req.url).origin;
+      const baseUrl = "https://phr.chirag.codes";
       const uploadResult = await uploadService.uploadFile(userId, file, baseUrl);
 
       // Create document with file URL and size
