@@ -1,9 +1,14 @@
 import type { Context } from "hono";
 import { DocDoctorService } from "../services/docDoctor.service";
 import { StatusCodes } from "http-status-codes";
-import { createDocDoctorSchema, updateDocDoctorSchema } from "../validators/docDoctor.schema";
+import {
+  createDocDoctorSchema,
+  updateDocDoctorSchema,
+} from "../validators/docDoctor.schema";
+import { DocumentService } from "../services";
 
 const docDoctorService = new DocDoctorService();
+const documentsService = new DocumentService();
 
 export class DocDoctorController {
   async getDocDoctorsByUserId(ctx: Context) {
@@ -32,7 +37,10 @@ export class DocDoctorController {
     try {
       const userId = ctx.get("userId");
       const body = createDocDoctorSchema.parse(await ctx.req.json());
-      const createdDocDoctor = await docDoctorService.createDocDoctor(userId, body);
+      const createdDocDoctor = await docDoctorService.createDocDoctor(
+        userId,
+        body,
+      );
       return ctx.json(createdDocDoctor, StatusCodes.CREATED);
     } catch (err) {
       console.error(err);
@@ -55,11 +63,13 @@ export class DocDoctorController {
   async deleteDocDoctor(ctx: Context) {
     try {
       const id = ctx.req.param("id");
-      await docDoctorService.deleteDocDoctor(id);
+      const userId = ctx.get("userId");
+      await documentsService.deleteDocumentsByDoctor(userId, id);
+      await docDoctorService.deleteDocDoctor(userId, id);
       return ctx.json({}, StatusCodes.OK);
     } catch (err) {
       console.error(err);
       return ctx.json({}, StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
-} 
+}

@@ -57,4 +57,11 @@ export class DocumentService {
   async deleteDocument(id: string) {
     return await Document.findByIdAndDelete(id);
   }
+
+  async deleteDocumentsByDoctor(userId: string, docDoctorId: string) {
+    return await Document.deleteMany({
+      userId,
+      docDoctorId: new mongoose.Types.ObjectId(docDoctorId),
+    });
+  }
 }

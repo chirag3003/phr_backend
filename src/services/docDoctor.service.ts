@@ -18,7 +18,7 @@ export class DocDoctorService {
     return await DocDoctor.findByIdAndUpdate(id, docDoctor);
   }
 
-  async deleteDocDoctor(id: string) {
+  async deleteDocDoctor(userId: string, id: string) {
     return await DocDoctor.findByIdAndDelete(id);
   }
 }
