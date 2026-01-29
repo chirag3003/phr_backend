@@ -1,0 +1,143 @@
+erDiagram
+    User {
+        ObjectId _id
+        string phoneNumber
+    }
+
+    Allergy {
+        ObjectId _id
+        ObjectId userId
+        string name
+        string severity
+        string notes
+        Date createdAt
+        Date updatedAt
+    }
+
+    DocDoctor {
+        ObjectId _id
+        ObjectId userId
+        string name
+        Date createdAt
+        Date updatedAt
+    }
+
+    Document {
+        ObjectId _id
+        ObjectId userId
+        string documentType
+        ObjectId docDoctorId
+        string title
+        Date date
+        string fileUrl
+        string fileSize
+        Date createdAt
+        Date updatedAt
+    }
+
+    Family {
+        ObjectId _id
+        ObjectId admin
+        string name
+        ObjectId[] members
+    }
+
+    FamilyPermission {
+        ObjectId _id
+        ObjectId userId
+        ObjectId family
+        ObjectId permissionTo
+        boolean write
+        boolean permissions_documents
+        boolean permissions_symptoms
+        boolean permissions_meals
+        boolean permissions_trends
+    }
+
+    Glucose {
+        ObjectId _id
+        ObjectId userId
+        number value
+        string unit
+        Date dateRecorded
+        int time_hour
+        int time_minute
+        string mealContext
+        string notes
+        Date createdAt
+        Date updatedAt
+    }
+
+    Meal {
+        ObjectId _id
+        ObjectId userId
+        string name
+        string detail
+        string type
+        string mealImage
+        number calories
+        number protein
+        number carbs
+        number fiber
+        Date dateRecorded
+        string time
+        string addedBy
+        string notes
+        Date createdAt
+        Date updatedAt
+    }
+
+    Profile {
+        ObjectId _id
+        ObjectId userId
+        string firstName
+        string lastName
+        Date dob
+        string sex
+        string diabetesType
+        string bloodType
+        number height
+        number weight
+        Date createdAt
+        Date updatedAt
+    }
+
+    Symptom {
+        ObjectId _id
+        ObjectId userId
+        string symptomName
+        string intensity
+        Date dateRecorded
+        int time_hour
+        int time_minute
+        string notes
+        Date createdAt
+        Date updatedAt
+    }
+
+    Upload {
+        ObjectId _id
+        ObjectId userId
+        string filename
+        string originalName
+        string mimetype
+        number size
+        string url
+        Date createdAt
+        Date updatedAt
+    }
+
+    User ||--o{ Allergy : "has"
+    User ||--o{ DocDoctor : "has"
+    User ||--o{ Document : "owns"
+    DocDoctor ||--o{ Document : "prescribes"
+    User ||--o{ Family : "administers"
+    User }o--o| Family : "is member of"
+    User ||--o{ FamilyPermission : "granted to"
+    Family ||--o{ FamilyPermission : "in context of"
+    User ||--o{ FamilyPermission : "accesses data of"
+    User ||--o{ Glucose : "records"
+    User ||--o{ Meal : "records"
+    User ||--|| Profile : "has"
+    User ||--o{ Symptom : "records"
+    User ||--o{ Upload : "uploads"
