@@ -34,6 +34,17 @@ export class FamilyController {
     }
   }
 
+  async getFamilyWithMembers(ctx: Context) {
+    try {
+      const id = ctx.req.param("id");
+      const family = await familyService.getFamilyWithMembers(id);
+      return ctx.json(family, StatusCodes.OK);
+    } catch (err) {
+      console.error(err);
+      return ctx.json({}, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
+
   async createFamily(ctx: Context) {
     try {
       const userId = ctx.get("userId");

@@ -14,6 +14,10 @@ export class FamilyService {
     return await Family.findById(id);
   }
 
+  async getFamilyWithMembers(id: string) {
+    return await Family.findById(id).populate(["admin", "members"]);
+  }
+
   async createFamily(family: CreateFamilyInput) {
     return await Family.create(family);
   }
@@ -82,10 +86,7 @@ export class FamilyService {
     );
   }
 
-  async getPermissionEntry(
-    userId: string,
-    permissionTo: string,
-  ) {
+  async getPermissionEntry(userId: string, permissionTo: string) {
     return await FamilyPermission.findOne({
       userId,
       permissionTo,
