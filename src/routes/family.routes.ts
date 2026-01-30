@@ -8,6 +8,7 @@ const familyRoutes = new Hono();
 // Family CRUD
 familyRoutes.get("/", authMiddleware, familyController.getFamiliesByUserId);
 familyRoutes.get("/:id", authMiddleware, familyController.getFamilyById);
+familyRoutes.get("/:id/members", authMiddleware, familyController.getFamilyWithMembers);
 familyRoutes.post("/", authMiddleware, familyController.createFamily);
 familyRoutes.put("/:id", authMiddleware, familyController.updateFamily);
 familyRoutes.delete("/:id", authMiddleware, familyController.deleteFamily);

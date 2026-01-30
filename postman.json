@@ -1210,7 +1210,33 @@
               "variable": [
                 {
                   "key": "id",
-                  "value": ""
+                  "value": "",
+                  "description": "Family ID"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Family With Members",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/family/:id/members",
+              "host": ["{{baseUrl}}"],
+              "path": ["family", ":id", "members"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Family ID"
                 }
               ]
             }
@@ -1268,7 +1294,8 @@
               "variable": [
                 {
                   "key": "id",
-                  "value": ""
+                  "value": "",
+                  "description": "Family ID"
                 }
               ]
             }
@@ -1292,7 +1319,8 @@
               "variable": [
                 {
                   "key": "id",
-                  "value": ""
+                  "value": "",
+                  "description": "Family ID"
                 }
               ]
             }
@@ -1315,7 +1343,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"userId\": \"member_user_id_here\"\n}"
+              "raw": "{\n  \"phoneNumber\": \"9876543210\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/family/:id/members",
@@ -1324,7 +1352,8 @@
               "variable": [
                 {
                   "key": "id",
-                  "value": ""
+                  "value": "",
+                  "description": "Family ID"
                 }
               ]
             }
@@ -1356,7 +1385,8 @@
               "variable": [
                 {
                   "key": "id",
-                  "value": ""
+                  "value": "",
+                  "description": "Family ID"
                 }
               ]
             }
@@ -1374,19 +1404,14 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/family/:id/permissions?permissionTo=target_user_id",
+              "raw": "{{baseUrl}}/family/permissions?permissionTo=target_user_id",
               "host": ["{{baseUrl}}"],
-              "path": ["family", ":id", "permissions"],
+              "path": ["family", "permissions"],
               "query": [
                 {
                   "key": "permissionTo",
-                  "value": "target_user_id"
-                }
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
+                  "value": "target_user_id",
+                  "description": "User ID to check permissions for"
                 }
               ]
             }
@@ -1412,15 +1437,9 @@
               "raw": "{\n  \"permissionTo\": \"target_user_id\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/family/:id/permissions",
+              "raw": "{{baseUrl}}/family/permissions",
               "host": ["{{baseUrl}}"],
-              "path": ["family", ":id", "permissions"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
-                }
-              ]
+              "path": ["family", "permissions"]
             }
           },
           "response": []
@@ -1450,7 +1469,8 @@
               "variable": [
                 {
                   "key": "id",
-                  "value": ""
+                  "value": "",
+                  "description": "Family ID"
                 }
               ]
             }
@@ -1474,13 +1494,15 @@
               "query": [
                 {
                   "key": "permissionTo",
-                  "value": "target_user_id"
+                  "value": "target_user_id",
+                  "description": "User ID to delete permissions for"
                 }
               ],
               "variable": [
                 {
                   "key": "id",
-                  "value": ""
+                  "value": "",
+                  "description": "Family ID"
                 }
               ]
             }
