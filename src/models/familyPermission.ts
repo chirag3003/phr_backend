@@ -2,7 +2,6 @@ import mongoose, { Schema, Document } from "mongoose";
 
 export interface IFamilyPermission extends Document {
   userId: mongoose.Types.ObjectId;
-  family: mongoose.Types.ObjectId;
   permissionTo: mongoose.Types.ObjectId;
   write: boolean;
   permissions: {
@@ -17,11 +16,6 @@ const familyPermissionSchema = new Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true,
-  },
-  family: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Family",
     required: true,
   },
   permissionTo: {

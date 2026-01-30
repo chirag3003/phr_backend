@@ -17,8 +17,8 @@ familyRoutes.post("/:id/members", authMiddleware, familyController.addMemberToFa
 familyRoutes.delete("/:id/members", authMiddleware, familyController.removeMemberFromFamily);
 
 // Permission management
-familyRoutes.get("/:id/permissions", authMiddleware, familyController.getPermissionEntry);
-familyRoutes.post("/:id/permissions", authMiddleware, familyController.createPermissionEntry);
+familyRoutes.get("/permissions", authMiddleware, familyController.getPermissionEntry);
+familyRoutes.post("/permissions", authMiddleware, familyController.createPermissionEntry);
 familyRoutes.put("/:id/permissions", authMiddleware, familyController.updatePermissionEntry);
 familyRoutes.delete("/:id/permissions", authMiddleware, familyController.deletePermissionEntry);
 

@@ -1,10 +1,15 @@
 import type { Context } from "hono";
 import { FamilyService } from "../services/family.service";
 import { StatusCodes } from "http-status-codes";
-import { createFamilySchema, updateFamilySchema } from "../validators/family.schema";
+import {
+  createFamilySchema,
+  updateFamilySchema,
+} from "../validators/family.schema";
 import { updateFamilyPermissionSchema } from "../validators/familyPermission.schema";
+import { UserService } from "../services";
 
 const familyService = new FamilyService();
+const userService = new UserService();
 
 export class FamilyController {
   async getFamiliesByUserId(ctx: Context) {
@@ -59,7 +64,6 @@ export class FamilyController {
   async deleteFamily(ctx: Context) {
     try {
       const id = ctx.req.param("id");
-      await familyService.deleteFamilyPermissions(id);
       await familyService.deleteFamily(id);
       return ctx.json({ message: "Family deleted" }, StatusCodes.OK);
     } catch (err) {
@@ -71,8 +75,15 @@ export class FamilyController {
   async addMemberToFamily(ctx: Context) {
     try {
       const familyId = ctx.req.param("id");
-      const { userId } = await ctx.req.json();
-      
+      const { phoneNumber } = await ctx.req.json();
+
+      // Get user by phone number
+      const user = await userService.getUserByPhoneNumber(phoneNumber);
+      if (!user) {
+        return ctx.json({ error: "User not found" }, StatusCodes.NOT_FOUND);
+      }
+      const userId = user._id.toString();
+
       // Get current family to find existing members
       const family = await familyService.getFamilyById(familyId);
       if (!family) {
@@ -80,17 +91,23 @@ export class FamilyController {
       }
 
       // Add member to family
-      const updatedFamily = await familyService.addMemberToFamily(familyId, userId);
+      const updatedFamily = await familyService.addMemberToFamily(
+        familyId,
+        userId,
+      );
 
       // Create permission entries: new member -> all existing members (including admin)
-      const allExistingMembers = [family.admin.toString(), ...family.members.map((m: any) => m.toString())];
+      const allExistingMembers = [
+        family.admin.toString(),
+        ...family.members.map((m: any) => m.toString()),
+      ];
       for (const existingMemberId of allExistingMembers) {
-        await familyService.createPermissionEntry(familyId, userId, existingMemberId);
+        await familyService.createPermissionEntry(userId, existingMemberId);
       }
 
       // Create permission entries: all existing members -> new member
       for (const existingMemberId of allExistingMembers) {
-        await familyService.createPermissionEntry(familyId, existingMemberId, userId);
+        await familyService.createPermissionEntry(existingMemberId, userId);
       }
 
       return ctx.json(updatedFamily, StatusCodes.OK);
@@ -114,7 +131,10 @@ export class FamilyController {
       // Delete all permission entries where this user is the grantor (userId)
       await familyService.deletePermissionsByUserId(familyId, userId);
 
-      const updatedFamily = await familyService.removeMemberFromFamily(familyId, userId);
+      const updatedFamily = await familyService.removeMemberFromFamily(
+        familyId,
+        userId,
+      );
       return ctx.json(updatedFamily, StatusCodes.OK);
     } catch (err) {
       console.error(err);
@@ -124,10 +144,12 @@ export class FamilyController {
 
   async createPermissionEntry(ctx: Context) {
     try {
-      const familyId = ctx.req.param("id");
       const userId = ctx.get("userId");
       const { permissionTo } = await ctx.req.json();
-      const permission = await familyService.createPermissionEntry(familyId, userId, permissionTo);
+      const permission = await familyService.createPermissionEntry(
+        userId,
+        permissionTo,
+      );
       return ctx.json(permission, StatusCodes.CREATED);
     } catch (err) {
       console.error(err);
@@ -142,7 +164,12 @@ export class FamilyController {
       const body = await ctx.req.json();
       const { permissionTo, ...data } = body;
       const validatedData = updateFamilyPermissionSchema.parse(data);
-      const permission = await familyService.updatePermissionEntry(userId, familyId, permissionTo, validatedData);
+      const permission = await familyService.updatePermissionEntry(
+        userId,
+        familyId,
+        permissionTo,
+        validatedData,
+      );
       return ctx.json(permission, StatusCodes.OK);
     } catch (err) {
       console.error(err);
@@ -152,10 +179,12 @@ export class FamilyController {
 
   async getPermissionEntry(ctx: Context) {
     try {
-      const familyId = ctx.req.param("id");
       const userId = ctx.get("userId");
       const permissionTo = ctx.req.query("permissionTo") as string;
-      const permission = await familyService.getPermissionEntry(userId, familyId, permissionTo);
+      const permission = await familyService.getPermissionEntry(
+        userId,
+        permissionTo,
+      );
       return ctx.json(permission, StatusCodes.OK);
     } catch (err) {
       console.error(err);

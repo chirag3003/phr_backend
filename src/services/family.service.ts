@@ -50,13 +50,15 @@ export class FamilyService {
     );
   }
 
-  async createPermissionEntry(
-    familyId: string,
-    userId: string,
-    permissionTo: string,
-  ) {
+  async createPermissionEntry(userId: string, permissionTo: string) {
+    const entry = await FamilyPermission.findOne({
+      userId,
+      permissionTo,
+    });
+    if (entry) {
+      return entry;
+    }
     return await FamilyPermission.create({
-      family: familyId,
       userId,
       permissionTo,
     });
@@ -82,12 +84,10 @@ export class FamilyService {
 
   async getPermissionEntry(
     userId: string,
-    familyId: string,
     permissionTo: string,
   ) {
     return await FamilyPermission.findOne({
       userId,
-      family: familyId,
       permissionTo,
     });
   }
@@ -108,12 +108,6 @@ export class FamilyService {
     return await FamilyPermission.deleteMany({
       family,
       $or: [{ userId }, { permissionTo: userId }],
-    });
-  }
-
-  async deleteFamilyPermissions(familyId: string) {
-    return await FamilyPermission.deleteMany({
-      family: familyId,
     });
   }
 }
