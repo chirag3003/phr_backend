@@ -10,7 +10,7 @@ export class ProfileService {
     return await Profile.findById(id);
   }
 
-  async createProfile(userId: string, profile: CreateProfileInput) {
+  async createProfile(userId: string, profile: CreateProfileInput & { profileImage?: string }) {
     return await Profile.create({ ...profile, userId });
   }
 
@@ -20,6 +20,14 @@ export class ProfileService {
 
   async updateProfileByUserId(userId: string, profile: ProfileUpdateInput) {
     return await Profile.findOneAndUpdate({ userId }, profile);
+  }
+
+  async updateProfileImage(userId: string, profileImage: string) {
+    return await Profile.findOneAndUpdate(
+      { userId },
+      { profileImage },
+      { new: true }
+    );
   }
 
   async deleteProfile(id: string) {

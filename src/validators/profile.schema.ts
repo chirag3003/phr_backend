@@ -11,6 +11,7 @@ export const profileSchema = z.object({
   bloodType: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
   height: z.number().min(0).max(300),
   weight: z.number().min(0).max(500),
+  profileImage: z.string().url().optional(),
 });
 
 export type Profile = z.infer<typeof profileSchema>;

@@ -10,6 +10,7 @@ export interface IProfile extends Document {
   bloodType: string;
   height: number;
   weight: number;
+  profileImage?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -60,6 +61,10 @@ const profileSchema = new Schema<IProfile>(
       type: Number,
       required: true,
       min: 0,
+    },
+    profileImage: {
+      type: String,
+      trim: true,
     },
   },
   {

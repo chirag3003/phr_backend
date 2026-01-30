@@ -112,7 +112,7 @@
           "response": []
         },
         {
-          "name": "Create Profile",
+          "name": "Create Profile (JSON)",
           "request": {
             "method": "POST",
             "header": [
@@ -128,6 +128,74 @@
             "body": {
               "mode": "raw",
               "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"dob\": \"1990-01-15\",\n  \"sex\": \"Male\",\n  \"diabetesType\": \"Type 2\",\n  \"bloodType\": \"O+\",\n  \"height\": 175,\n  \"weight\": 70\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["profile"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Profile (With Image)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "firstName",
+                  "value": "John",
+                  "type": "text"
+                },
+                {
+                  "key": "lastName",
+                  "value": "Doe",
+                  "type": "text"
+                },
+                {
+                  "key": "dob",
+                  "value": "1990-01-15",
+                  "type": "text"
+                },
+                {
+                  "key": "sex",
+                  "value": "Male",
+                  "type": "text"
+                },
+                {
+                  "key": "diabetesType",
+                  "value": "Type 2",
+                  "type": "text"
+                },
+                {
+                  "key": "bloodType",
+                  "value": "O+",
+                  "type": "text"
+                },
+                {
+                  "key": "height",
+                  "value": "175",
+                  "type": "text"
+                },
+                {
+                  "key": "weight",
+                  "value": "70",
+                  "type": "text"
+                },
+                {
+                  "key": "profileImage",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
             },
             "url": {
               "raw": "{{baseUrl}}/profile",
@@ -156,15 +224,37 @@
               "raw": "{\n  \"weight\": 72,\n  \"height\": 176\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/profile/:id",
+              "raw": "{{baseUrl}}/profile",
               "host": ["{{baseUrl}}"],
-              "path": ["profile", ":id"],
-              "variable": [
+              "path": ["profile"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Profile Image",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
                 {
-                  "key": "id",
-                  "value": ""
+                  "key": "profileImage",
+                  "type": "file",
+                  "src": ""
                 }
               ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/profile/image",
+              "host": ["{{baseUrl}}"],
+              "path": ["profile", "image"]
             }
           },
           "response": []
