@@ -2,7 +2,7 @@ import type {
   CreateFamilyInput,
   FamilyUpdateInput,
 } from "../validators/family.schema";
-import { Family, FamilyPermission } from "../models";
+import { Family, FamilyPermission, Profile } from "../models";
 import type { FamilyPermissionUpdateInput } from "../validators/familyPermission.schema";
 
 export class FamilyService {
@@ -15,7 +15,46 @@ export class FamilyService {
   }
 
   async getFamilyWithMembers(id: string) {
-    return await Family.findById(id).populate(["admin", "members"]);
+    const family = await Family.findById(id).populate(["admin", "members"]);
+    if (!family) return null;
+
+    const familyObj = family.toObject();
+
+    // Fetch profiles for admin and members to get name and profileImage
+    const allUserIds = [
+      familyObj.admin._id,
+      ...familyObj.members.map((m) => m._id),
+    ];
+
+    const profiles = await Profile.find({ userId: { $in: allUserIds } }).select(
+      "userId firstName lastName profileImage",
+    );
+
+    const profileMap = new Map(
+      profiles.map((p) => [p.userId.toString(), p]),
+    );
+
+    // Enhance admin with profile data
+    const adminProfile = profileMap.get(familyObj.admin._id.toString());
+    familyObj.admin = {
+      ...familyObj.admin,
+      name: adminProfile
+        ? `${adminProfile.firstName} ${adminProfile.lastName}`
+        : undefined,
+      profileImage: adminProfile?.profileImage,
+    };
+
+    // Enhance members with profile data
+    familyObj.members = familyObj.members.map((member) => {
+      const profile = profileMap.get(member._id.toString());
+      return {
+        ...member,
+        name: profile ? `${profile.firstName} ${profile.lastName}` : undefined,
+        profileImage: profile?.profileImage,
+      };
+    });
+
+    return familyObj;
   }
 
   async createFamily(family: CreateFamilyInput) {

@@ -30,6 +30,13 @@ export class DocumentService {
       .sort({ date: -1 });
   }
 
+  async getDocumentsByDateRange(userId: string, startDate: Date, endDate: Date) {
+    return Document.find({
+      userId,
+      date: { $gte: startDate, $lte: endDate },
+    }).sort({ date: -1 });
+  }
+
   async createDocument(userId: string, document: CreateDocumentInput) {
     const docData = {
       ...document,
