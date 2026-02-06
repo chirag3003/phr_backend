@@ -210,6 +210,7 @@ export class PdfService {
             currentY += 20;
         });
 
+        doc.y = currentY; // Update doc.y to the end of the table
         doc.moveDown(2);
     }
 
@@ -233,8 +234,14 @@ export class PdfService {
             if (currentY > 700) {
                 doc.addPage();
                 currentY = 50;
-                // Redraw header... (omitted for brevity in this single file edit, ideally factored out)
+                this.drawTableHeader(doc, currentY, [
+                    { text: "Date/Time", x: 60 },
+                    { text: "Symptom", x: 180 },
+                    { text: "Intensity", x: 300 },
+                    { text: "Notes", x: 400 }
+                ]);
                 currentY += 20;
+                doc.fillColor(THEME.text).fontSize(9).font("Helvetica");
             }
 
             if (i % 2 === 0) {
@@ -253,6 +260,7 @@ export class PdfService {
             currentY += 20;
         });
 
+        doc.y = currentY;
         doc.moveDown(2);
     }
 
@@ -277,7 +285,15 @@ export class PdfService {
             if (currentY > 700) {
                 doc.addPage();
                 currentY = 50;
+                this.drawTableHeader(doc, currentY, [
+                    { text: "Date/Time", x: 60 },
+                    { text: "Food", x: 180 },
+                    { text: "Type", x: 300 },
+                    { text: "Calories", x: 380 },
+                    { text: "Macros", x: 450 }
+                ]);
                 currentY += 20;
+                doc.fillColor(THEME.text).fontSize(9).font("Helvetica");
             }
 
             if (i % 2 === 0) {
@@ -298,6 +314,7 @@ export class PdfService {
             currentY += 20;
         });
 
+        doc.y = currentY;
         doc.moveDown(2);
     }
 
@@ -318,7 +335,13 @@ export class PdfService {
             if (currentY > 700) {
                 doc.addPage();
                 currentY = 50;
+                this.drawTableHeader(doc, currentY, [
+                    { text: "Title", x: 60 },
+                    { text: "Type", x: 250 },
+                    { text: "Date", x: 400 }
+                ]);
                 currentY += 20;
+                doc.fillColor(THEME.text).fontSize(9).font("Helvetica");
             }
 
             if (i % 2 === 0) {
@@ -335,6 +358,7 @@ export class PdfService {
             currentY += 20;
         });
 
+        doc.y = currentY;
         doc.moveDown(2);
     }
 

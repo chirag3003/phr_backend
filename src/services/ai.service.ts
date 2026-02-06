@@ -1,3 +1,7 @@
+import { createWorker } from "tesseract.js";
+import path from "path";
+import fs from "fs";
+import type { IDocument } from "../models/document";
 import OpenAI from "openai";
 import type { SummaryData } from "../validators/summary.validator";
 
@@ -12,14 +16,15 @@ export class AiService {
 
     async generateHealthSummary(data: SummaryData): Promise<string> {
         try {
-            const prompt = this.createPrompt(data);
+            const documentText = await this.extractTextFromDocuments(data.documents);
+            const prompt = this.createPrompt(data, documentText);
 
             const response = await this.openai.chat.completions.create({
                 model: "gpt-4o",
                 messages: [
                     {
                         role: "system",
-                        content: "You are an empathetic and professional medical assistant. Your task is to summarize a patient's health data into a concise, easy-to-read executive summary for a doctor. Focus on trends, abnormal values, and key observations. Do not give medical advice, but highlight areas that might need attention. Keep it under 200 words."
+                        content: "You are an empathetic and professional medical assistant. Your task is to summarize a patient's health data into a concise, easy-to-read executive summary for a doctor. Focus on trends, abnormal values, and key observations. \n\nIMPORTANT FORMATTING RULES:\n- Do NOT use markdown symbols like **bold** (asterisks) or ## headers.\n- Use plain text only.\n- Use simple dashes (-) for lists if needed.\n- Keep it under 200 words."
                     },
                     {
                         role: "user",
@@ -36,8 +41,50 @@ export class AiService {
         }
     }
 
-    private createPrompt(data: SummaryData): string {
-        const { profile, glucose, symptoms, meals, documents } = data;
+    private async extractTextFromDocuments(documents: IDocument[]): Promise<string> {
+        if (documents.length === 0) return "";
+
+        let ocrResults = "\nSuccessfully Extracted Text from Documents:\n";
+        const worker = await createWorker("eng"); // Create worker once
+
+        for (const doc of documents) {
+            // Only process images
+            if (!doc.fileUrl.match(/\.(jpg|jpeg|png|bmp|webp)$/i)) {
+                continue;
+            }
+
+            try {
+                // Resolve path: assumes fileUrl is relative e.g. /uploads/file.png or http...
+                let imagePath = doc.fileUrl;
+                if (doc.fileUrl.startsWith("/")) {
+                    // It's likely a local path relative to project root or public dir
+                    // Our setup puts uploads in standard root 'uploads' usually
+                    const possiblePath = path.join(process.cwd(), doc.fileUrl);
+                    if (fs.existsSync(possiblePath)) {
+                        imagePath = possiblePath;
+                    } else if (doc.fileUrl.startsWith("/uploads/")) {
+                        // Try without leading slash if strictly in root
+                        imagePath = path.join(process.cwd(), doc.fileUrl.substring(1));
+                    }
+                }
+
+                const ret = await worker.recognize(imagePath);
+                const text = ret.data.text.replace(/\s+/g, " ").trim();
+
+                if (text.length > 5) {
+                    ocrResults += `\n[Document: ${doc.title} (${doc.documentType})]: ${text.substring(0, 500)}...\n`;
+                }
+            } catch (err) {
+                console.warn(`OCR Failed for ${doc.title}:`, err);
+            }
+        }
+
+        await worker.terminate();
+        return ocrResults;
+    }
+
+    private createPrompt(data: SummaryData, documentText: string): string {
+        const { profile, glucose, symptoms, meals } = data;
 
         let prompt = `Patient Profile:
     Name: ${profile?.firstName} ${profile?.lastName}
@@ -64,10 +111,9 @@ export class AiService {
       `;
         }
 
-        if (documents.length > 0) {
-            prompt += `\nAttached Documents:
-        ${documents.map(d => `- ${d.title} (${d.documentType})`).join("\n")}
-        `;
+        // Add OCR Text
+        if (documentText) {
+            prompt += `\n${documentText}`;
         }
 
         return prompt;
