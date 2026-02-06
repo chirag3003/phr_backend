@@ -54,12 +54,17 @@ export class InsightsController {
       if (!include.meals) data.meals = [];
       if (!include.documents) data.documents = [];
 
+      // Generate AI Summary
+      const { AiService } = await import("../services/ai.service");
+      const aiService = new AiService();
+      const aiSummary = await aiService.generateHealthSummary(data);
+
       // Generate PDF
       const { PdfService } = await import("../services/pdf.service");
       const pdfService = new PdfService();
-      const pdfUrl = await pdfService.generateHealthSummary(data);
+      const pdfUrl = await pdfService.generateHealthSummary(data, aiSummary);
 
-      return ctx.json({ url: pdfUrl }, StatusCodes.CREATED);
+      return ctx.json({ url: `http://localhost:5001${pdfUrl ?? ""}` }, StatusCodes.CREATED);
     } catch (error: any) {
       if (error.name === "ZodError") {
         return ctx.json({ error: error.issues }, StatusCodes.BAD_REQUEST);
