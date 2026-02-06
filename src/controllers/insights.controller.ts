@@ -64,7 +64,7 @@ export class InsightsController {
       const pdfService = new PdfService();
       const pdfUrl = await pdfService.generateHealthSummary(data, aiSummary);
 
-      return ctx.json({ url: `http://localhost:5001${pdfUrl ?? ""}` }, StatusCodes.CREATED);
+      return ctx.json({ url: `https://phr.chirag.codes${pdfUrl ?? ""}` }, StatusCodes.CREATED);
     } catch (error: any) {
       if (error.name === "ZodError") {
         return ctx.json({ error: error.issues }, StatusCodes.BAD_REQUEST);
