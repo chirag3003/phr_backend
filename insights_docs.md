@@ -64,6 +64,35 @@ Get AI-generated insights and tips based on the user's meal history, correlated 
 
 ---
 
+### POST `/insights/summary`
+
+Generate a comprehensive PDF health summary including an AI-generated overview and aggregated user data (profile, glucose, symptoms, meals, documents).
+
+**Authentication:** Required
+
+**Request Body:**
+```json
+{
+  "startDate": "2024-01-01T00:00:00Z",
+  "endDate": "2024-12-31T23:59:59Z",
+  "include": {
+    "glucose": true,
+    "symptoms": true,
+    "meals": true,
+    "documents": true
+  }
+}
+```
+
+**Response (201 Created):**
+```json
+{
+  "url": "https://phr.chirag.codes/uploads/summary-1707205432123.pdf"
+}
+```
+
+---
+
 ### GET `/insights/glucose`
 
 Get AI-generated insights about glucose patterns, including trend analysis, pattern detection, and personalized recommendations.
