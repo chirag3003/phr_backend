@@ -44,9 +44,9 @@ export class ProfileController {
         // Get optional profile image
         const file = formData.get("profileImage") as File | null;
         if (file && file.size > 0) {
-          // const baseUrl = new URL(ctx.req.url).origin;
-          const baseUrl = "https://phr.chirag.codes"
-          const uploadResult = await uploadService.uploadFile(userId, file, baseUrl);
+          const uploadResult = await uploadService.uploadFile(userId, file, {
+            folder: "profiles",
+          });
           profileImageUrl = uploadResult.url;
         }
 
@@ -107,8 +107,9 @@ export class ProfileController {
         );
       }
 
-      const baseUrl = new URL(ctx.req.url).origin;
-      const uploadResult = await uploadService.uploadFile(userId, file, baseUrl);
+      const uploadResult = await uploadService.uploadFile(userId, file, {
+        folder: "profiles",
+      });
 
       const updatedProfile = await profileService.updateProfileImage(
         userId,

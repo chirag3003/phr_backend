@@ -1,6 +1,6 @@
 import PDFDocument from "pdfkit";
-import fs from "fs";
-import path from "path";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { buildObjectKey, buildPublicUrl, getS3Client, getStorageConfig } from "../config/storage";
 import type { SummaryData } from "../validators/summary.validator";
 
 // Design Tokens
@@ -14,22 +14,13 @@ const THEME = {
 };
 
 export class PdfService {
-    private outputDir = "uploads";
-
-    constructor() {
-        if (!fs.existsSync(this.outputDir)) {
-            fs.mkdirSync(this.outputDir, { recursive: true });
-        }
-    }
-
     async generateHealthSummary(data: SummaryData, aiSummary?: string): Promise<string> {
         return new Promise((resolve, reject) => {
             const doc = new PDFDocument({ margin: 50, size: "A4", bufferPages: true });
-            const filename = `summary-${Date.now()}.pdf`;
-            const filePath = path.join(this.outputDir, filename);
-            const stream = fs.createWriteStream(filePath);
+            const chunks: Buffer[] = [];
 
-            doc.pipe(stream);
+            doc.on("data", (chunk) => chunks.push(chunk));
+            doc.on("error", (err) => reject(err));
 
             // --- Header ---
             this.generateHeader(doc);
@@ -65,15 +56,31 @@ export class PdfService {
             // --- Footer ---
             this.generateFooter(doc);
 
+            doc.on("end", async () => {
+                try {
+                    const buffer = Buffer.concat(chunks);
+                    const filename = `summary-${Date.now()}.pdf`;
+                    const key = buildObjectKey(filename, "summaries");
+                    const s3 = getS3Client();
+                    const { bucket } = getStorageConfig();
+
+                    await s3.send(
+                        new PutObjectCommand({
+                            Bucket: bucket,
+                            Key: key,
+                            Body: buffer,
+                            ContentType: "application/pdf",
+                            ACL: "public-read",
+                        }),
+                    );
+
+                    resolve(buildPublicUrl(key));
+                } catch (err) {
+                    reject(err);
+                }
+            });
+
             doc.end();
-
-            stream.on("finish", () => {
-                resolve(`/uploads/${filename}`);
-            });
-
-            stream.on("error", (err) => {
-                reject(err);
-            });
         });
     }
 

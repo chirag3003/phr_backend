@@ -15,6 +15,7 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1000.0",
     "hono": "^4.11.4",
     "http-status-codes": "^2.3.0",
     "mongoose": "^9.1.3",

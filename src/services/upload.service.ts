@@ -1,17 +1,7 @@
-import { mkdir } from "node:fs/promises";
-import { join } from "node:path";
+import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import Upload from "../models/upload";
+import { buildObjectKey, buildPublicUrl, getS3Client, getStorageConfig } from "../config/storage";
 
-const UPLOAD_DIR = join(process.cwd(), "uploads");
-
-// Ensure upload directory exists
-async function ensureUploadDir() {
-  try {
-    await mkdir(UPLOAD_DIR, { recursive: true });
-  } catch (error) {
-    // Directory already exists
-  }
-}
 
 export interface UploadResult {
   filename: string;
@@ -22,24 +12,35 @@ export interface UploadResult {
 }
 
 export class UploadService {
-  async uploadFile(userId: string, file: File, baseUrl: string): Promise<UploadResult> {
-    await ensureUploadDir();
-
+  async uploadFile(
+    userId: string,
+    file: File,
+    options?: { folder?: string },
+  ): Promise<UploadResult> {
+    const s3 = getS3Client();
+    const { bucket } = getStorageConfig();
     const timestamp = Date.now();
     const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
     const filename = `${timestamp}-${sanitizedName}`;
-    const filepath = join(UPLOAD_DIR, filename);
-
-    // Write file to disk
+    const folder = options?.folder;
+    const key = buildObjectKey(filename, folder);
     const arrayBuffer = await file.arrayBuffer();
-    await Bun.write(filepath, arrayBuffer);
 
-    const url = `${baseUrl}/uploads/${filename}`;
+    await s3.send(
+      new PutObjectCommand({
+        Bucket: bucket,
+        Key: key,
+        Body: Buffer.from(arrayBuffer),
+        ContentType: file.type || "application/octet-stream",
+        ACL: "public-read",
+      }),
+    );
 
-    // Save to database
+    const url = buildPublicUrl(key);
+
     const upload = await Upload.create({
       userId,
-      filename,
+      filename: key,
       originalName: file.name,
       mimetype: file.type,
       size: file.size,
@@ -55,15 +56,12 @@ export class UploadService {
     };
   }
 
-  async uploadFiles(userId: string, files: File[], baseUrl: string): Promise<UploadResult[]> {
-    const results: UploadResult[] = [];
-
-    for (const file of files) {
-      const result = await this.uploadFile(userId, file, baseUrl);
-      results.push(result);
-    }
-
-    return results;
+  async uploadFiles(
+    userId: string,
+    files: File[],
+    options?: { folder?: string },
+  ): Promise<UploadResult[]> {
+    return Promise.all(files.map((file) => this.uploadFile(userId, file, options)));
   }
 
   async getUploadsByUserId(userId: string) {
@@ -77,12 +75,16 @@ export class UploadService {
   async deleteUpload(id: string) {
     const upload = await Upload.findById(id);
     if (upload) {
-      const filepath = join(UPLOAD_DIR, upload.filename);
       try {
-        await Bun.file(filepath).exists() && await Bun.write(filepath, "");
-        // Note: Bun doesn't have a direct delete, using unlink from node:fs
-        const { unlink } = await import("node:fs/promises");
-        await unlink(filepath);
+        const s3 = getS3Client();
+        const { bucket } = getStorageConfig();
+        const key = upload.filename;
+        await s3.send(
+          new DeleteObjectCommand({
+            Bucket: bucket,
+            Key: key,
+          }),
+        );
       } catch (error) {
         console.error("Error deleting file:", error);
       }

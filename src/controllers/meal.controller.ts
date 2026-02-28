@@ -116,10 +116,9 @@ export class MealController {
       // Analyze the image using OpenAI
       const mealAnalysis = await analyzeMealImage(base64, file.type);
 
-      // Upload the image to get a URL
-      // const baseUrl = new URL(ctx.req.url).origin;
-      const baseUrl = "https://phr.chirag.codes"
-      const uploadResult = await uploadService.uploadFile(userId, file, baseUrl);
+      const uploadResult = await uploadService.uploadFile(userId, file, {
+        folder: "meals",
+      });
 
       // Create the meal with analyzed data
       const now = new Date();

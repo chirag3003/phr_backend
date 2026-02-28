@@ -24,10 +24,7 @@ export class UploadController {
         );
       }
 
-      // Get base URL for constructing the image URL
-      const baseUrl = new URL(ctx.req.url).origin;
-
-      const result = await uploadService.uploadFile(userId, file, baseUrl);
+      const result = await uploadService.uploadFile(userId, file);
 
       return ctx.json(result, StatusCodes.CREATED);
     } catch (err) {
@@ -57,10 +54,7 @@ export class UploadController {
         }
       }
 
-      // Get base URL for constructing the image URL
-      const baseUrl = new URL(ctx.req.url).origin;
-
-      const results = await uploadService.uploadFiles(userId, files, baseUrl);
+      const results = await uploadService.uploadFiles(userId, files);
 
       return ctx.json(results, StatusCodes.CREATED);
     } catch (err) {
