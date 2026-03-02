@@ -44,12 +44,9 @@ export class AuthController {
       const body = createUserSchema.parse(await ctx.req.json());
 
       // Find user by phone number
-      const user = await userService.getUserByPhoneNumber(body.phoneNumber);
+      let user = await userService.getUserByPhoneNumber(body.phoneNumber);
       if (!user) {
-        return ctx.json(
-          { error: "User not found" },
-          StatusCodes.NOT_FOUND
-        );
+        user = await userService.createUser(body);
       }
 
       // Generate JWT token
