@@ -1868,6 +1868,24 @@
           "response": []
         },
         {
+          "name": "Get Water Insights",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/insights/water",
+              "host": ["{{baseUrl}}"],
+              "path": ["insights", "water"]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Get Health Summary PDF",
           "request": {
             "method": "POST",
@@ -1889,6 +1907,205 @@
               "raw": "{{baseUrl}}/insights/summary",
               "host": ["{{baseUrl}}"],
               "path": ["insights", "summary"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Water",
+      "item": [
+        {
+          "name": "Get All Water Records",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/water",
+              "host": ["{{baseUrl}}"],
+              "path": ["water"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Latest Water Record",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/water/latest",
+              "host": ["{{baseUrl}}"],
+              "path": ["water", "latest"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Water By Date Range",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/water/range?startDate=2026-01-01&endDate=2026-12-31",
+              "host": ["{{baseUrl}}"],
+              "path": ["water", "range"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2026-01-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2026-12-31"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Water By Date",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/water/date?date=2026-01-22",
+              "host": ["{{baseUrl}}"],
+              "path": ["water", "date"],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "2026-01-22"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Water By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/water/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["water", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Or Update Water Record",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dateRecorded\": \"2026-01-22\",\n  \"glasses\": 6\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/water",
+              "host": ["{{baseUrl}}"],
+              "path": ["water"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Water Record",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"glasses\": 8\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/water/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["water", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Water Record",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/water/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["water", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
             }
           },
           "response": []
