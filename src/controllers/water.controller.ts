@@ -41,10 +41,22 @@ export class WaterController {
         return ctx.json({ error: "startDate and endDate are required" }, StatusCodes.BAD_REQUEST);
       }
 
+      const parsedStart = new Date(startDate);
+      const parsedEnd = new Date(endDate);
+      if (Number.isNaN(parsedStart.getTime()) || Number.isNaN(parsedEnd.getTime())) {
+        return ctx.json({ error: "Invalid date format" }, StatusCodes.BAD_REQUEST);
+      }
+      if (parsedStart > parsedEnd) {
+        return ctx.json(
+          { error: "startDate must be before or equal to endDate" },
+          StatusCodes.BAD_REQUEST
+        );
+      }
+
       const records = await waterService.getWaterByDateRange(
         userId,
-        new Date(startDate),
-        new Date(endDate),
+        parsedStart,
+        parsedEnd,
       );
       return ctx.json(records, StatusCodes.OK);
     } catch (e) {
