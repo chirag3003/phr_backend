@@ -61,10 +61,12 @@ export class WaterController {
         return ctx.json({ error: "date is required" }, StatusCodes.BAD_REQUEST);
       }
 
-      const record = await waterService.getWaterByDate(userId, new Date(date));
-      if (!record) {
-        return ctx.json({ error: "Water intake not found" }, StatusCodes.NOT_FOUND);
+      const parsedDate = new Date(date);
+      if (Number.isNaN(parsedDate.getTime())) {
+        return ctx.json({ error: "Invalid date format" }, StatusCodes.BAD_REQUEST);
       }
+
+      const record = await waterService.getOrCreateWaterByDate(userId, parsedDate);
       return ctx.json(record, StatusCodes.OK);
     } catch (e) {
       console.error(e);

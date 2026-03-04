@@ -22,6 +22,28 @@ export class WaterService {
     });
   }
 
+  async getOrCreateWaterByDate(userId: string, dateRecorded: Date) {
+    const start = new Date(dateRecorded);
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(dateRecorded);
+    end.setHours(23, 59, 59, 999);
+
+    const existing = await Water.findOne({
+      userId,
+      dateRecorded: { $gte: start, $lte: end },
+    });
+
+    if (existing) {
+      return existing;
+    }
+
+    return Water.create({
+      userId,
+      dateRecorded: start,
+      glasses: 0,
+    });
+  }
+
   async getWaterByDateRange(userId: string, startDate: Date, endDate: Date) {
     return Water.find({
       userId,
