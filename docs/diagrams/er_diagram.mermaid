@@ -55,6 +55,16 @@ erDiagram
         boolean permissions_water
     }
 
+    Insight {
+        ObjectId _id
+        ObjectId userId
+        string type
+        string dateKey
+        json payload
+        Date createdAt
+        Date updatedAt
+    }
+
     Glucose {
         ObjectId _id
         ObjectId userId
@@ -104,6 +114,15 @@ erDiagram
         Date updatedAt
     }
 
+    Water {
+        ObjectId _id
+        ObjectId userId
+        Date dateRecorded
+        number glasses
+        Date createdAt
+        Date updatedAt
+    }
+
     Symptom {
         ObjectId _id
         ObjectId userId
@@ -137,8 +156,10 @@ erDiagram
     User }o--o| Family : "is member of"
     User ||--o{ FamilyPermission : "granted to"
     User ||--o{ FamilyPermission : "accesses data of"
+    User ||--o{ Insight : "has"
     User ||--o{ Glucose : "records"
     User ||--o{ Meal : "records"
     User ||--|| Profile : "has"
     User ||--o{ Symptom : "records"
     User ||--o{ Upload : "uploads"
+    User ||--o{ Water : "records"
