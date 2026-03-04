@@ -18,12 +18,11 @@ export class FamilyService {
     const family = await Family.findById(id).populate(["admin", "members"]);
     if (!family) return null;
 
-    const familyObj = family.toObject();
+    const familyObj = family.toObject() as any;
 
-    // Fetch profiles for admin and members to get name and profileImage
     const allUserIds = [
       familyObj.admin._id,
-      ...familyObj.members.map((m) => m._id),
+      ...familyObj.members.map((m: any) => m._id),
     ];
 
     const profiles = await Profile.find({ userId: { $in: allUserIds } }).select(
@@ -34,7 +33,6 @@ export class FamilyService {
       profiles.map((p) => [p.userId.toString(), p]),
     );
 
-    // Enhance admin with profile data
     const adminProfile = profileMap.get(familyObj.admin._id.toString());
     familyObj.admin = {
       ...familyObj.admin,
@@ -44,8 +42,7 @@ export class FamilyService {
       profileImage: adminProfile?.profileImage,
     };
 
-    // Enhance members with profile data
-    familyObj.members = familyObj.members.map((member) => {
+    familyObj.members = familyObj.members.map((member: any) => {
       const profile = profileMap.get(member._id.toString());
       return {
         ...member,
@@ -62,7 +59,7 @@ export class FamilyService {
   }
 
   async updateFamily(id: string, family: FamilyUpdateInput) {
-    return await Family.findByIdAndUpdate(id, family);
+    return await Family.findByIdAndUpdate(id, family, { new: true });
   }
 
   async deleteFamily(id: string) {

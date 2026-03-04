@@ -16,6 +16,7 @@ familyRoutes.delete("/:id", authMiddleware, familyController.deleteFamily);
 // Member management
 familyRoutes.post("/:id/members", authMiddleware, familyController.addMemberToFamily);
 familyRoutes.delete("/:id/members", authMiddleware, familyController.removeMemberFromFamily);
+familyRoutes.post("/:id/leave", authMiddleware, familyController.leaveFamily);
 
 // Permission management
 familyRoutes.get("/permissions", authMiddleware, familyController.getPermissionEntry);

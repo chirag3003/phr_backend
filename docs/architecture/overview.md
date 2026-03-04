@@ -26,6 +26,7 @@ This service powers the backend API for a diabetes-focused personal health recor
 - AI insights and PDF summaries
 - Family sharing and permissions
 - Shared read/write access to permitted data
+- Family membership is independent of permission entries
 
 ## Storage Layout (S3)
 Objects are stored under a common prefix (default `uploads/`) with per-feature folders:

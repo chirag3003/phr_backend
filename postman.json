@@ -1484,6 +1484,31 @@
           "response": []
         },
         {
+          "name": "Leave Family",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/family/:id/leave",
+              "host": ["{{baseUrl}}"],
+              "path": ["family", ":id", "leave"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Family ID"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Get Permission Entry",
           "request": {
             "method": "GET",

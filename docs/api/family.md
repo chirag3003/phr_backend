@@ -15,6 +15,7 @@ All endpoints require `Authorization: Bearer <jwt>`.
 ## Member Management
 - `POST /family/:id/members` (body: `{ "phoneNumber": "..." }`)
 - `DELETE /family/:id/members` (body: `{ "userId": "..." }`)
+- `POST /family/:id/leave`
 
 ## Permissions
 - `GET /family/permissions?permissionTo=<userId>`
@@ -23,3 +24,4 @@ All endpoints require `Authorization: Bearer <jwt>`.
 - `DELETE /family/:id/permissions?permissionTo=<userId>`
 
 Permissions are user-to-user and not scoped to a family. The `:id` parameter is ignored for permission updates/deletes.
+Family deletion does not remove permission entries.
