@@ -4,6 +4,7 @@ Backend API for a diabetes-focused personal health record (PHR) app. It supports
 
 ## Features
 - Glucose logging and stats
+- Water intake tracking
 - Meal logging and AI meal image analysis
 - Symptoms and allergies tracking
 - Document storage (prescriptions/reports)

@@ -9,6 +9,7 @@ export { default as DocDoctor } from './doc_doctor';
 export { default as Family } from './family';
 export { default as FamilyPermission } from './familyPermission';
 export { default as Glucose } from './glucose';
+export { default as Water } from './water';
 
 // Export interfaces
 export type { IProfile } from './profile';
@@ -20,3 +21,4 @@ export type { IDocDoctor } from './doc_doctor';
 export type { IFamily } from './family';
 export type { IFamilyPermission } from './familyPermission';
 export type { IGlucose } from './glucose';
+export type { IWater } from './water';

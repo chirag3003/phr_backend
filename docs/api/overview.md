@@ -16,6 +16,7 @@ Start here, then drill into each feature.
 - `docs/api/meals.md`
 - `docs/api/symptoms.md`
 - `docs/api/allergies.md`
+- `docs/api/water.md`
 
 ## Documents and Uploads
 - `docs/api/documents.md`

@@ -4,6 +4,7 @@ import { MealService } from "./meal.service";
 import { SymptomService } from "./symptom.service";
 import { GlucoseService } from "./glucose.service";
 import { DocumentService } from "./document.service";
+import { WaterService } from "./water.service";
 import { generateMealInsights, generateGlucoseInsights } from "../lib/insights";
 import type { MealInsightsResponse, GlucoseInsightsResponse, UserDataForInsights } from "../validators";
 
@@ -14,6 +15,7 @@ export class InsightsService {
   private symptomService: SymptomService;
   private glucoseService: GlucoseService;
   private documentService: DocumentService;
+  private waterService: WaterService;
 
   constructor() {
     this.profileService = new ProfileService();
@@ -22,15 +24,17 @@ export class InsightsService {
     this.symptomService = new SymptomService();
     this.glucoseService = new GlucoseService();
     this.documentService = new DocumentService();
+    this.waterService = new WaterService();
   }
 
   private async gatherUserData(userId: string): Promise<UserDataForInsights> {
-    const [profile, allergies, meals, symptoms, glucoseReadings] = await Promise.all([
+    const [profile, allergies, meals, symptoms, glucoseReadings, waterRecords] = await Promise.all([
       this.profileService.getProfile(userId),
       this.allergyService.getAllergies(userId),
       this.mealService.getMeals(userId),
       this.symptomService.getSymptoms(userId),
       this.glucoseService.getGlucoseReadings(userId),
+      this.waterService.getWaterByUserId(userId),
     ]);
 
     return {
@@ -46,6 +50,10 @@ export class InsightsService {
           weight: profile.weight,
         }
         : null,
+      waterRecords: waterRecords.map((w) => ({
+        dateRecorded: w.dateRecorded,
+        glasses: w.glasses,
+      })),
       allergies: allergies.map((a) => ({
         name: a.name,
         severity: a.severity,

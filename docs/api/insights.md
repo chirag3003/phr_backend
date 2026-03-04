@@ -13,6 +13,9 @@ Returns AI-generated glucose insights.
 ## POST `/insights/summary`
 Generates a PDF health summary and returns a public S3 URL.
 
+## GET `/insights/water`
+Returns AI-generated water intake insights.
+
 Request body:
 ```json
 {

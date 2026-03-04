@@ -10,6 +10,7 @@ import familyRoutes from "./family.routes";
 import glucoseRoutes from "./glucose.routes";
 import insightsRoutes from "./insights.routes";
 import docDoctorRoutes from "./docDoctor.routes";
+import waterRoutes from "./water.routes";
 
 const app = new Hono();
 
@@ -24,5 +25,6 @@ app.route("/family", familyRoutes);
 app.route("/glucose", glucoseRoutes);
 app.route("/insights", insightsRoutes);
 app.route("/docDoctors", docDoctorRoutes);
+app.route("/water", waterRoutes);
 
 export default app;

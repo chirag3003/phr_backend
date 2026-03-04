@@ -8,3 +8,6 @@ export { MealController } from './meal.controller';
 export { DocumentController } from './document.controller';
 export { UploadController } from './upload.controller';
 export { FamilyController } from './family.controller';
+export { InsightsController } from './insights.controller';
+export { WaterController } from './water.controller';
+export { WaterInsightsController } from './waterInsights.controller';

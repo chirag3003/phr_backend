@@ -1,8 +1,10 @@
 import {
   mealInsightsResponseSchema,
   glucoseInsightsResponseSchema,
+  waterInsightsResponseSchema,
   type MealInsightsResponse,
   type GlucoseInsightsResponse,
+  type WaterInsightsResponse,
   type UserDataForInsights,
 } from "../validators";
 
@@ -255,4 +257,73 @@ Provide max 2 insights, max 2 patterns, and max 2 tips. Focus on:
 
   const parsed = JSON.parse(jsonMatch[0]);
   return glucoseInsightsResponseSchema.parse(parsed);
+}
+
+export async function generateWaterInsights(
+  data: { profile: UserDataForInsights["profile"]; waterRecords: UserDataForInsights["waterRecords"] }
+): Promise<WaterInsightsResponse> {
+  const systemPrompt = `You are a hydration coach focused on diabetes-friendly wellness. 
+You analyze daily water intake and provide concise, actionable insights.
+Always return valid JSON matching the exact schema provided. Be encouraging and practical.`;
+
+  const recentWater = data.waterRecords.slice(0, 30);
+  const avgGlasses =
+    recentWater.length > 0
+      ? Math.round(recentWater.reduce((sum, w) => sum + w.glasses, 0) / recentWater.length)
+      : 0;
+  const maxGlasses = recentWater.length > 0 ? Math.max(...recentWater.map((w) => w.glasses)) : 0;
+  const minGlasses = recentWater.length > 0 ? Math.min(...recentWater.map((w) => w.glasses)) : 0;
+
+  const prompt = `Analyze this patient's water intake data and provide insights and tips.
+
+PATIENT PROFILE:
+${
+  data.profile
+    ? `
+- Age: ${data.profile.dob ? calculateAge(data.profile.dob) : "Unknown"}
+- Sex: ${data.profile.sex || "Not specified"}
+- Height: ${data.profile.height || "Unknown"} cm
+- Weight: ${data.profile.weight || "Unknown"} kg
+`
+    : "No profile data available"
+}
+
+WATER INTAKE (Last ${recentWater.length} days):
+${
+  recentWater.length > 0
+    ? recentWater
+        .map((w) => `- ${new Date(w.dateRecorded).toLocaleDateString()}: ${w.glasses} glasses`)
+        .join("\n")
+    : "No water records"
+}
+
+SUMMARY STATS:
+- Average glasses/day: ${avgGlasses}
+- Min/Max glasses/day: ${minGlasses} / ${maxGlasses}
+
+Return ONLY valid JSON with this exact structure:
+{
+  "insights": [
+    { "title": "Short insight title", "description": "Detailed explanation", "type": "positive|warning|info" }
+  ],
+  "tips": [
+    { "title": "Tip title", "description": "Actionable advice", "priority": "high|medium|low" }
+  ],
+  "summary": "Brief overall summary of hydration patterns"
+}
+
+Provide max 3 insights and max 3 tips and return empty arrays if nothing is found. Focus on:
+- Consistency of daily intake
+- Low-intake days and streaks
+- Actionable routines to improve hydration`;
+
+  const content = await callOpenAI(prompt, systemPrompt);
+
+  const jsonMatch = content.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) {
+    throw new Error("Could not parse JSON from OpenAI response");
+  }
+
+  const parsed = JSON.parse(jsonMatch[0]);
+  return waterInsightsResponseSchema.parse(parsed);
 }

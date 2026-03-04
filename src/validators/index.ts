@@ -8,3 +8,4 @@ export * from './document.schema';
 export * from './upload.schema';
 export * from './glucose.schema';
 export * from './insights.schema';
+export * from './water.schema';

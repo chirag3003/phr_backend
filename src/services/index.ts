@@ -6,3 +6,5 @@ export { SymptomService } from './symptom.service';
 export { MealService } from './meal.service';
 export { DocumentService } from './document.service';
 export { UploadService } from './upload.service';
+export { WaterService } from './water.service';
+export { WaterInsightsService } from './waterInsights.service';

@@ -54,6 +54,29 @@ export type GlucosePattern = z.infer<typeof glucosePatternSchema>;
 export type GlucoseTip = z.infer<typeof glucoseTipSchema>;
 export type GlucoseInsightsResponse = z.infer<typeof glucoseInsightsResponseSchema>;
 
+// Water Insights Schema
+export const waterInsightSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  type: z.enum(["positive", "warning", "info"]),
+});
+
+export const waterTipSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  priority: z.enum(["high", "medium", "low"]),
+});
+
+export const waterInsightsResponseSchema = z.object({
+  insights: z.array(waterInsightSchema),
+  tips: z.array(waterTipSchema),
+  summary: z.string(),
+});
+
+export type WaterInsight = z.infer<typeof waterInsightSchema>;
+export type WaterTip = z.infer<typeof waterTipSchema>;
+export type WaterInsightsResponse = z.infer<typeof waterInsightsResponseSchema>;
+
 // User Data for Insights Generation
 export const userDataForInsightsSchema = z.object({
   profile: z.object({
@@ -66,6 +89,10 @@ export const userDataForInsightsSchema = z.object({
     height: z.number().optional(),
     weight: z.number().optional(),
   }).nullable(),
+  waterRecords: z.array(z.object({
+    dateRecorded: z.coerce.date(),
+    glasses: z.number(),
+  })),
   allergies: z.array(z.object({
     name: z.string(),
     severity: z.string(),
