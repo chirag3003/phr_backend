@@ -5,8 +5,10 @@ import { SymptomService } from "./symptom.service";
 import { GlucoseService } from "./glucose.service";
 import { DocumentService } from "./document.service";
 import { WaterService } from "./water.service";
+import { Insight } from "../models";
 import { generateMealInsights, generateGlucoseInsights } from "../lib/insights";
 import type { MealInsightsResponse, GlucoseInsightsResponse, UserDataForInsights } from "../validators";
+import { getUtcDateKey } from "../utils/date";
 
 export class InsightsService {
   private profileService: ProfileService;
@@ -88,13 +90,29 @@ export class InsightsService {
   }
 
   async getMealInsights(userId: string): Promise<MealInsightsResponse> {
+    const dateKey = getUtcDateKey();
+    const existing = await Insight.findOne({ userId, type: "meal", dateKey });
+    if (existing) {
+      return existing.payload as MealInsightsResponse;
+    }
+
     const userData = await this.gatherUserData(userId);
-    return generateMealInsights(userData);
+    const payload = await generateMealInsights(userData);
+    await Insight.create({ userId, type: "meal", dateKey, payload });
+    return payload;
   }
 
   async getGlucoseInsights(userId: string): Promise<GlucoseInsightsResponse> {
+    const dateKey = getUtcDateKey();
+    const existing = await Insight.findOne({ userId, type: "glucose", dateKey });
+    if (existing) {
+      return existing.payload as GlucoseInsightsResponse;
+    }
+
     const userData = await this.gatherUserData(userId);
-    return generateGlucoseInsights(userData);
+    const payload = await generateGlucoseInsights(userData);
+    await Insight.create({ userId, type: "glucose", dateKey, payload });
+    return payload;
   }
 
   async getSummaryData(userId: string, startDate: Date, endDate: Date) {

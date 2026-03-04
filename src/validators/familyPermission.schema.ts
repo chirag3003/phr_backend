@@ -9,7 +9,9 @@ export const familyPermissionSchema = z.object({
     documents: z.boolean(),
     symptoms: z.boolean(),
     meals: z.boolean(),
-    trends: z.boolean(),
+    glucose: z.boolean(),
+    allergies: z.boolean(),
+    water: z.boolean(),
   }),
 });
 

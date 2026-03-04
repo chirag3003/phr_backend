@@ -1550,7 +1550,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"permissionTo\": \"target_user_id\",\n  \"write\": true,\n  \"permissions\": {\n    \"documents\": true,\n    \"symptoms\": true,\n    \"meals\": true,\n    \"trends\": false\n  }\n}"
+              "raw": "{\n  \"permissionTo\": \"target_user_id\",\n  \"write\": true,\n  \"permissions\": {\n    \"documents\": true,\n    \"symptoms\": true,\n    \"meals\": true,\n    \"glucose\": false,\n    \"allergies\": false,\n    \"water\": false\n  }\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/family/:id/permissions",
@@ -2103,6 +2103,820 @@
               "variable": [
                 {
                   "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Shared",
+      "item": [
+        {
+          "name": "Get Shared Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "profile"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Shared Meals",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/meals",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "meals"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Shared Meal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Oatmeal with Berries\",\n  \"detail\": \"Healthy breakfast option\",\n  \"type\": \"Breakfast\",\n  \"calories\": 350,\n  \"protein\": 12,\n  \"carbs\": 55,\n  \"fiber\": 8,\n  \"dateRecorded\": \"2025-12-15\",\n  \"time\": \"08:30\",\n  \"addedBy\": \"Family\",\n  \"notes\": \"Added honey for sweetness\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/meals",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "meals"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Shared Meal",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"calories\": 400,\n  \"notes\": \"Updated calories after measuring\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/meals/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "meals", ":id"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                },
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Shared Meal",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/meals/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "meals", ":id"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                },
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Shared Glucose",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/glucose",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "glucose"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Shared Glucose",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"value\": 110,\n  \"unit\": \"mg/dL\",\n  \"dateRecorded\": \"2026-01-22\",\n  \"time\": {\n    \"hour\": 8,\n    \"minute\": 30\n  },\n  \"mealContext\": \"Fasting\",\n  \"notes\": \"Morning reading before breakfast\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/glucose",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "glucose"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Shared Glucose",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"value\": 115,\n  \"notes\": \"Updated reading\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/glucose/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "glucose", ":id"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                },
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Shared Glucose",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/glucose/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "glucose", ":id"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                },
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Shared Glucose Insights",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/insights/glucose",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "insights", "glucose"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Shared Symptoms",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/symptoms",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "symptoms"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Shared Symptom",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"symptomName\": \"Headache\",\n  \"intensity\": \"Medium\",\n  \"dateRecorded\": \"2025-12-15\",\n  \"time\": {\n    \"hour\": 14,\n    \"minute\": 30\n  },\n  \"notes\": \"Started after lunch\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/symptoms",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "symptoms"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Shared Symptom",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"intensity\": \"Low\",\n  \"notes\": \"Feeling better now\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/symptoms/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "symptoms", ":id"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                },
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Shared Symptom",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/symptoms/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "symptoms", ":id"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                },
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Shared Documents",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/documents",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "documents"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Shared Document",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": ""
+                },
+                {
+                  "key": "documentType",
+                  "value": "Report",
+                  "type": "text"
+                },
+                {
+                  "key": "title",
+                  "value": "Shared Report",
+                  "type": "text"
+                },
+                {
+                  "key": "date",
+                  "value": "2026-01-27",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/documents",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "documents"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Shared Document",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"date\": \"2026-01-28\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/documents/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "documents", ":id"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                },
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Shared Document",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/documents/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "documents", ":id"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                },
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Shared Allergies",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/allergies",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "allergies"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Shared Allergy",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Peanuts\",\n  \"severity\": \"High\",\n  \"notes\": \"Causes difficulty in breathing\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/allergies",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "allergies"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Shared Allergy",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"severity\": \"Medium\",\n  \"notes\": \"Updated notes\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/allergies/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "allergies", ":id"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                },
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Shared Allergy",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/allergies/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "allergies", ":id"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                },
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Shared Water",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/water",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "water"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Shared Water",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dateRecorded\": \"2026-01-22\",\n  \"glasses\": 6\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/water",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "water"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Shared Water",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"glasses\": 8\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/water/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "water", ":id"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                },
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Shared Water",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/water/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "water", ":id"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                },
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Shared Water Insights",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/shared/:userId/insights/water",
+              "host": ["{{baseUrl}}"],
+              "path": ["shared", ":userId", "insights", "water"],
+              "variable": [
+                {
+                  "key": "userId",
                   "value": ""
                 }
               ]

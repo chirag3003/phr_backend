@@ -10,6 +10,7 @@ export { default as Family } from './family';
 export { default as FamilyPermission } from './familyPermission';
 export { default as Glucose } from './glucose';
 export { default as Water } from './water';
+export { default as Insight } from './insight';
 
 // Export interfaces
 export type { IProfile } from './profile';
@@ -22,3 +23,4 @@ export type { IFamily } from './family';
 export type { IFamilyPermission } from './familyPermission';
 export type { IGlucose } from './glucose';
 export type { IWater } from './water';
+export type { IInsight } from './insight';

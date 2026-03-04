@@ -20,5 +20,6 @@ Base URL defaults to `http://localhost:5000` when running locally.
 - `/family`
 - `/insights`
 - `/water`
+- `/shared`
 
 See `docs/api/` for detailed request/response examples.

@@ -37,7 +37,7 @@ export class DocumentService {
     }).sort({ date: -1 });
   }
 
-  async createDocument(userId: string, document: CreateDocumentInput) {
+  async createDocument(userId: string, document: CreateDocumentInput & { fileUrl?: string; fileSize?: string }) {
     const docData = {
       ...document,
       userId,

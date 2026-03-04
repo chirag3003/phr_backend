@@ -14,7 +14,7 @@ This service powers the backend API for a diabetes-focused personal health recor
 - Clients authenticate via `/auth/signup` and `/auth/login`.
 - Data is stored in MongoDB and accessed through route → controller → service layers.
 - Uploads go to S3 via `UploadService` and return public URLs stored in MongoDB.
-- Insights endpoints call OpenAI for meal, glucose, and water insights.
+- Insights endpoints call OpenAI for meal, glucose, and water insights and cache results per UTC day.
 - Summary generation combines data, runs OCR on document images, creates a PDF, and uploads it to S3.
 
 ## Core Feature Areas
@@ -25,6 +25,7 @@ This service powers the backend API for a diabetes-focused personal health recor
 - Prescriptions and reports storage
 - AI insights and PDF summaries
 - Family sharing and permissions
+- Shared read/write access to permitted data
 
 ## Storage Layout (S3)
 Objects are stored under a common prefix (default `uploads/`) with per-feature folders:

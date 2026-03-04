@@ -8,7 +8,9 @@ export interface IFamilyPermission extends Document {
     documents: boolean;
     symptoms: boolean;
     meals: boolean;
-    trends: boolean;
+    glucose: boolean;
+    allergies: boolean;
+    water: boolean;
   };
 }
 
@@ -40,7 +42,15 @@ const familyPermissionSchema = new Schema({
       type: Boolean,
       default: false,
     },
-    trends: {
+    glucose: {
+      type: Boolean,
+      default: false,
+    },
+    allergies: {
+      type: Boolean,
+      default: false,
+    },
+    water: {
       type: Boolean,
       default: false,
     },

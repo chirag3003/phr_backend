@@ -109,14 +109,12 @@ export class FamilyService {
 
   async updatePermissionEntry(
     userId: string,
-    familyId: string,
     permissionTo: string,
     data: FamilyPermissionUpdateInput,
   ) {
     return await FamilyPermission.findOneAndUpdate(
       {
         userId,
-        family: familyId,
         permissionTo,
       },
       {
@@ -134,19 +132,16 @@ export class FamilyService {
 
   async deletePermissionEntry(
     userId: string,
-    familyId: string,
     permissionTo: string,
   ) {
     return await FamilyPermission.findOneAndDelete({
       userId,
-      family: familyId,
       permissionTo,
     });
   }
 
-  async deletePermissionsByUserId(family: string, userId: string) {
+  async deletePermissionsByUserId(userId: string) {
     return await FamilyPermission.deleteMany({
-      family,
       $or: [{ userId }, { permissionTo: userId }],
     });
   }

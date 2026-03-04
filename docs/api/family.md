@@ -19,5 +19,7 @@ All endpoints require `Authorization: Bearer <jwt>`.
 ## Permissions
 - `GET /family/permissions?permissionTo=<userId>`
 - `POST /family/permissions` (body: `{ "permissionTo": "..." }`)
-- `PUT /family/:id/permissions` (body: `{ permissionTo, write, permissions: { documents, symptoms, meals, trends } }`)
+- `PUT /family/:id/permissions` (body: `{ permissionTo, write, permissions: { documents, symptoms, meals, glucose, allergies, water } }`)
 - `DELETE /family/:id/permissions?permissionTo=<userId>`
+
+Permissions are user-to-user and not scoped to a family. The `:id` parameter is ignored for permission updates/deletes.

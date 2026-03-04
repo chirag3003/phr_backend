@@ -145,7 +145,7 @@ export class FamilyController {
 			}
 
 			// Delete all permission entries where this user is the grantor (userId)
-			await familyService.deletePermissionsByUserId(familyId, userId);
+      await familyService.deletePermissionsByUserId(userId);
 
 			const updatedFamily = await familyService.removeMemberFromFamily(
 				familyId,
@@ -175,17 +175,15 @@ export class FamilyController {
 
 	async updatePermissionEntry(ctx: Context) {
 		try {
-			const familyId = ctx.req.param("id");
-			const userId = ctx.get("userId");
-			const body = await ctx.req.json();
+      const userId = ctx.get("userId");
+      const body = await ctx.req.json();
 			const { permissionTo, ...data } = body;
 			const validatedData = updateFamilyPermissionSchema.parse(data);
-			const permission = await familyService.updatePermissionEntry(
-				userId,
-				familyId,
-				permissionTo,
-				validatedData,
-			);
+      const permission = await familyService.updatePermissionEntry(
+        userId,
+        permissionTo,
+        validatedData,
+      );
 			return ctx.json(permission, StatusCodes.OK);
 		} catch (err) {
 			console.error(err);
@@ -210,10 +208,9 @@ export class FamilyController {
 
 	async deletePermissionEntry(ctx: Context) {
 		try {
-			const familyId = ctx.req.param("id");
-			const userId = ctx.get("userId");
-			const permissionTo = ctx.req.query("permissionTo") as string;
-			await familyService.deletePermissionEntry(userId, familyId, permissionTo);
+      const userId = ctx.get("userId");
+      const permissionTo = ctx.req.query("permissionTo") as string;
+      await familyService.deletePermissionEntry(userId, permissionTo);
 			return ctx.json({ message: "Permission deleted" }, StatusCodes.OK);
 		} catch (err) {
 			console.error(err);

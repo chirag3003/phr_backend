@@ -16,6 +16,15 @@ Generates a PDF health summary and returns a public S3 URL.
 ## GET `/insights/water`
 Returns AI-generated water intake insights.
 
+## Caching
+Insights are cached per user per UTC day.
+
+## GET `/shared/:userId/insights/glucose`
+Returns cached glucose insights for a shared user (requires glucose permission).
+
+## GET `/shared/:userId/insights/water`
+Returns cached water insights for a shared user (requires water permission).
+
 Request body:
 ```json
 {

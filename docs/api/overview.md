@@ -18,6 +18,10 @@ Start here, then drill into each feature.
 - `docs/api/allergies.md`
 - `docs/api/water.md`
 
+## Sharing
+- `docs/api/shared.md`
+- `docs/api/insights-shared.md`
+
 ## Documents and Uploads
 - `docs/api/documents.md`
 - `docs/api/uploads.md`
