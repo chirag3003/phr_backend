@@ -137,17 +137,20 @@ export class FamilyController {
 			// Get user by phone number
 			const user = await userService.getUserByPhoneNumber(normalizedPhoneNumber);
 			if (!user) {
+        console.log("user not found")
 				return ctx.json({ error: "User not found" }, StatusCodes.NOT_FOUND);
 			}
 			const userId = user._id.toString();
 			const userProfile = await profileService.getProfileById(userId);
 			if (!userProfile) {
+        console.time("user profile not found")  
 				return ctx.json({ error: "User not found" }, StatusCodes.NOT_FOUND);
 			}
 
 			// Get current family to find existing members
 			const family = await familyService.getFamilyById(familyId);
 			if (!family) {
+        console.log("Family not found")
 				return ctx.json({ error: "Family not found" }, StatusCodes.NOT_FOUND);
 			}
 			if (family.admin.toString() !== requesterId) {
