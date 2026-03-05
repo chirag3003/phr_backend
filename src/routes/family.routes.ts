@@ -21,7 +21,7 @@ familyRoutes.post("/:id/leave", authMiddleware, familyController.leaveFamily);
 // Permission management
 familyRoutes.get("/permissions", authMiddleware, familyController.getPermissionEntry);
 familyRoutes.post("/permissions", authMiddleware, familyController.createPermissionEntry);
-familyRoutes.put("/permissions", authMiddleware, familyController.updatePermissionEntry);
+familyRoutes.put("/:id/permissions", authMiddleware, familyController.updatePermissionEntry);
 familyRoutes.delete("/permissions", authMiddleware, familyController.deletePermissionEntry);
 
 export default familyRoutes;
