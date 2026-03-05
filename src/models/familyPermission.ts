@@ -48,7 +48,7 @@ const familyPermissionSchema = new Schema({
     },
     allergies: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     water: {
       type: Boolean,
