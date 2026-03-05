@@ -11,7 +11,7 @@ export class ProfileService {
   }
 
   async createProfile(userId: string, profile: CreateProfileInput & { profileImage?: string }) {
-    return await Profile.create({ ...profile, userId });
+    return await Profile.updateOne({userId: userId}, { ...profile, userId }, { upsert: true });
   }
 
   async updateProfile(id: string, profile: ProfileUpdateInput) {
