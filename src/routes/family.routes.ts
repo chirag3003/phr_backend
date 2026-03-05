@@ -5,6 +5,12 @@ import { authMiddleware } from "../middlewares/auth.middleware";
 const familyController = new FamilyController();
 const familyRoutes = new Hono();
 
+// Permission management
+familyRoutes.get("/permissions", authMiddleware, familyController.getPermissionEntry);
+familyRoutes.post("/permissions", authMiddleware, familyController.createPermissionEntry);
+familyRoutes.put("/:id/permissions", authMiddleware, familyController.updatePermissionEntry);
+familyRoutes.delete("/permissions", authMiddleware, familyController.deletePermissionEntry);
+
 // Family CRUD
 familyRoutes.get("/", authMiddleware, familyController.getFamiliesByUserId);
 familyRoutes.get("/:id", authMiddleware, familyController.getFamilyById);
@@ -17,11 +23,5 @@ familyRoutes.delete("/:id", authMiddleware, familyController.deleteFamily);
 familyRoutes.post("/:id/members", authMiddleware, familyController.addMemberToFamily);
 familyRoutes.delete("/:id/members", authMiddleware, familyController.removeMemberFromFamily);
 familyRoutes.post("/:id/leave", authMiddleware, familyController.leaveFamily);
-
-// Permission management
-familyRoutes.get("/permissions", authMiddleware, familyController.getPermissionEntry);
-familyRoutes.post("/permissions", authMiddleware, familyController.createPermissionEntry);
-familyRoutes.put("/:id/permissions", authMiddleware, familyController.updatePermissionEntry);
-familyRoutes.delete("/permissions", authMiddleware, familyController.deletePermissionEntry);
 
 export default familyRoutes;
