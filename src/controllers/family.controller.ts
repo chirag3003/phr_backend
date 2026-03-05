@@ -125,9 +125,17 @@ export class FamilyController {
 			const familyId = ctx.req.param("id");
 			const requesterId = ctx.get("userId");
 			const { phoneNumber } = await ctx.req.json();
+			const digitsOnly = String(phoneNumber ?? "").replace(/\D/g, "");
+			const normalizedPhoneNumber = digitsOnly.slice(-10);
+			if (normalizedPhoneNumber.length < 10) {
+				return ctx.json(
+					{ error: "Invalid phone number. Provide at least 10 digits." },
+					StatusCodes.BAD_REQUEST,
+				);
+			}
 
 			// Get user by phone number
-			const user = await userService.getUserByPhoneNumber(phoneNumber);
+			const user = await userService.getUserByPhoneNumber(normalizedPhoneNumber);
 			if (!user) {
 				return ctx.json({ error: "User not found" }, StatusCodes.NOT_FOUND);
 			}
