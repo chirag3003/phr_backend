@@ -7,6 +7,7 @@ const familyRoutes = new Hono();
 
 // Permission management
 familyRoutes.get("/permissions", authMiddleware, familyController.getPermissionEntry);
+familyRoutes.get("/permissionsFrom", authMiddleware, familyController.getPermissionFromEntry);
 familyRoutes.post("/permissions", authMiddleware, familyController.createPermissionEntry);
 familyRoutes.put("/:id/permissions", authMiddleware, familyController.updatePermissionEntry);
 familyRoutes.delete("/permissions", authMiddleware, familyController.deletePermissionEntry);

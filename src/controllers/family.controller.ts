@@ -7,6 +7,7 @@ import {
 } from "../validators/family.schema";
 import { updateFamilyPermissionSchema } from "../validators/familyPermission.schema";
 import { ProfileService, UserService } from "../services";
+import user from "../models/user";
 
 const familyService = new FamilyService();
 const userService = new UserService();
@@ -268,6 +269,21 @@ export class FamilyController {
 			return ctx.json({}, StatusCodes.INTERNAL_SERVER_ERROR);
 		}
 	}
+
+  async getPermissionFromEntry(ctx: Context) {
+    try {
+      const userId = ctx.get("userId");
+      const permissionFrom = ctx.req.query("permissionFrom") as string;
+      const permission = await familyService.getPermissionEntry(
+        permissionFrom,
+        userId
+      );
+      return ctx.json(permission, StatusCodes.OK);
+    } catch (err) {
+      console.error(err);
+      return ctx.json({}, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
 
 	async deletePermissionEntry(ctx: Context) {
 		try {
