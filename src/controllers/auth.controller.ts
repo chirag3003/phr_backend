@@ -6,20 +6,21 @@ import { generateJWT } from "../lib/auth";
 
 const userService = new UserService();
 
-export class AuthController {
-  private normalizePhoneNumber(input: string) {
-    const digitsOnly = String(input ?? "").replace(/\D/g, "");
-    const normalized = digitsOnly.slice(-10);
-    if (normalized.length < 10) {
-      throw new Error("Invalid phone number. Provide at least 10 digits.");
-    }
-    return normalized;
+function normalizePhoneNumber(input: string) {
+  const digitsOnly = String(input ?? "").replace(/\D/g, "");
+  const normalized = digitsOnly.slice(-10);
+  if (normalized.length < 10) {
+    throw new Error("Invalid phone number. Provide at least 10 digits.");
   }
+  return normalized;
+}
+
+export class AuthController {
 
   async signup(ctx: Context) {
     try {
       const body = createUserSchema.parse(await ctx.req.json());
-      body.phoneNumber = this.normalizePhoneNumber(body.phoneNumber);
+      body.phoneNumber = normalizePhoneNumber(body.phoneNumber);
 
       // Check if user already exists
       const existingUser = await userService.getUserByPhoneNumber(body.phoneNumber);
@@ -55,7 +56,7 @@ export class AuthController {
   async login(ctx: Context) {
     try {
       const body = createUserSchema.parse(await ctx.req.json());
-      body.phoneNumber = this.normalizePhoneNumber(body.phoneNumber);
+      body.phoneNumber = normalizePhoneNumber(body.phoneNumber);
 
       // Find user by phone number
       let user = await userService.getUserByPhoneNumber(body.phoneNumber);
