@@ -66,6 +66,13 @@ sharedRoutes.get(
   (ctx) => sharedController.getSharedGlucoseInsights(ctx),
 );
 
+// Meal insights (shared)
+sharedRoutes.get(
+  "/:userId/insights/meals",
+  permissionMiddleware({ domain: "meals" }),
+  (ctx) => sharedController.getSharedMealInsights(ctx),
+);
+
 // Symptoms
 sharedRoutes.get(
   "/:userId/symptoms",

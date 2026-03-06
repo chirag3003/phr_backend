@@ -13,6 +13,7 @@ All endpoints require `Authorization: Bearer <jwt>` and a valid permission entry
 - `GET /shared/:userId/allergies`
 - `GET /shared/:userId/water`
 - `GET /shared/:userId/insights/glucose`
+- `GET /shared/:userId/insights/meals`
 - `GET /shared/:userId/insights/water`
 
 ## Write Endpoints

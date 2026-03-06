@@ -364,6 +364,17 @@ export class SharedController {
     }
   }
 
+  async getSharedMealInsights(ctx: Context) {
+    try {
+      const targetUserId = ctx.get("targetUserId");
+      const insights = await insightsService.getMealInsights(targetUserId);
+      return ctx.json(insights, StatusCodes.OK);
+    } catch (error) {
+      console.error(error);
+      return ctx.json({}, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
+
   async getSharedWaterInsights(ctx: Context) {
     try {
       const targetUserId = ctx.get("targetUserId");
