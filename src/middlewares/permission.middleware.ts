@@ -38,8 +38,8 @@ export function permissionMiddleware(options: PermissionOptions) {
     }
 
     const permission = await FamilyPermission.findOne({
-      userId,
-      permissionTo: targetUserId,
+      userId: targetUserId,
+      permissionTo: userId,
     });
 
     if (!hasDomainPermission(permission, options.domain)) {
