@@ -10,11 +10,13 @@ All endpoints require `Authorization: Bearer <jwt>` and a valid permission entry
 - `GET /shared/:userId/glucose`
 - `GET /shared/:userId/symptoms`
 - `GET /shared/:userId/documents`
+- `GET /shared/:userId/docDoctors`
 - `GET /shared/:userId/allergies`
 - `GET /shared/:userId/water`
 - `GET /shared/:userId/insights/glucose`
 - `GET /shared/:userId/insights/meals`
 - `GET /shared/:userId/insights/water`
+- `POST /shared/:userId/insights/summary`
 
 ## Write Endpoints
 Write access requires both `write: true` and the domain permission set to `true`.
@@ -32,8 +34,15 @@ Write access requires both `write: true` and the domain permission set to `true`
 - `DELETE /shared/:userId/symptoms/:id`
 
 - `POST /shared/:userId/documents` (multipart with file)
+- `POST /shared/:userId/docDoctors`
+- `PUT /shared/:userId/docDoctors/:id`
+- `DELETE /shared/:userId/docDoctors/:id`
 - `PUT /shared/:userId/documents/:id`
 - `DELETE /shared/:userId/documents/:id`
+
+## Shared Summary Rules
+- `POST /shared/:userId/insights/summary` requires a valid share entry.
+- Summary sections are trimmed to allowed domains, even if the request includes them.
 
 - `POST /shared/:userId/allergies`
 - `PUT /shared/:userId/allergies/:id`

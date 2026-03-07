@@ -11,6 +11,7 @@ import {
   InsightsService,
   UploadService,
   WaterInsightsService,
+  DocDoctorService,
 } from "../services";
 import {
   createAllergySchema,
@@ -26,6 +27,10 @@ import {
   createWaterSchema,
   updateWaterSchema,
 } from "../validators";
+import { createDocDoctorSchema } from "../validators/docDoctor.schema";
+import { updateDocDoctorSchema } from "../validators/docDoctor.schema";
+import { summaryRequestSchema } from "../validators/summary.validator";
+import { FamilyPermission } from "../models";
 
 const profileService = new ProfileService();
 const mealService = new MealService();
@@ -37,6 +42,7 @@ const waterService = new WaterService();
 const insightsService = new InsightsService();
 const uploadService = new UploadService();
 const waterInsightsService = new WaterInsightsService();
+const docDoctorService = new DocDoctorService();
 
 export class SharedController {
   async getProfile(ctx: Context) {
@@ -196,6 +202,67 @@ export class SharedController {
     } catch (error) {
       console.error(error);
       return ctx.json({}, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async getDocDoctors(ctx: Context) {
+    try {
+      const targetUserId = ctx.get("targetUserId");
+      const doctors = await docDoctorService.getDocDoctorsByUserId(targetUserId);
+      return ctx.json(doctors, StatusCodes.OK);
+    } catch (error) {
+      console.error(error);
+      return ctx.json({}, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async createDocDoctor(ctx: Context) {
+    try {
+      const targetUserId = ctx.get("targetUserId");
+      const body = createDocDoctorSchema.parse(await ctx.req.json());
+      const created = await docDoctorService.createDocDoctor(targetUserId, body);
+      return ctx.json(created, StatusCodes.CREATED);
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        return ctx.json({ error: error.issues }, StatusCodes.BAD_REQUEST);
+      }
+      console.error(error);
+      return ctx.json({ error: "Internal server error" }, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async updateDocDoctor(ctx: Context) {
+    try {
+      const targetUserId = ctx.get("targetUserId");
+      const id = ctx.req.param("id");
+      const body = updateDocDoctorSchema.parse(await ctx.req.json());
+      const updated = await docDoctorService.updateDocDoctorByUser(targetUserId, id, body);
+      if (!updated) {
+        return ctx.json({ error: "Doctor not found" }, StatusCodes.NOT_FOUND);
+      }
+      return ctx.json(updated, StatusCodes.OK);
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        return ctx.json({ error: error.issues }, StatusCodes.BAD_REQUEST);
+      }
+      console.error(error);
+      return ctx.json({ error: "Internal server error" }, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async deleteDocDoctor(ctx: Context) {
+    try {
+      const targetUserId = ctx.get("targetUserId");
+      const id = ctx.req.param("id");
+      const deleted = await docDoctorService.deleteDocDoctorByUser(targetUserId, id);
+      if (!deleted) {
+        return ctx.json({ error: "Doctor not found" }, StatusCodes.NOT_FOUND);
+      }
+      await documentService.deleteDocumentsByDoctor(targetUserId, id);
+      return ctx.json({}, StatusCodes.OK);
+    } catch (error) {
+      console.error(error);
+      return ctx.json({ error: "Internal server error" }, StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -383,6 +450,54 @@ export class SharedController {
     } catch (error) {
       console.error(error);
       return ctx.json({}, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async generateSharedSummary(ctx: Context) {
+    try {
+      const requesterId = ctx.get("userId");
+      const targetUserId = ctx.get("targetUserId");
+      const body = await ctx.req.json();
+      const { startDate, endDate, include } = summaryRequestSchema.parse(body);
+
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+
+      const data = await insightsService.getSummaryData(targetUserId, start, end);
+
+      const permission = await FamilyPermission.findOne({
+        userId: targetUserId,
+        permissionTo: requesterId,
+      });
+
+      const permissions = permission?.permissions;
+      const effectiveInclude = {
+        glucose: Boolean(include.glucose && permissions?.glucose),
+        symptoms: Boolean(include.symptoms && permissions?.symptoms),
+        meals: Boolean(include.meals && permissions?.meals),
+        documents: Boolean(include.documents && permissions?.documents),
+      };
+
+      if (!effectiveInclude.glucose) data.glucose = [];
+      if (!effectiveInclude.symptoms) data.symptoms = [];
+      if (!effectiveInclude.meals) data.meals = [];
+      if (!effectiveInclude.documents) data.documents = [];
+
+      const { AiService } = await import("../services/ai.service");
+      const aiService = new AiService();
+      const aiSummary = await aiService.generateHealthSummary(data);
+
+      const { PdfService } = await import("../services/pdf.service");
+      const pdfService = new PdfService();
+      const pdfUrl = await pdfService.generateHealthSummary(data, aiSummary);
+
+      return ctx.json({ url: pdfUrl }, StatusCodes.CREATED);
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        return ctx.json({ error: error.issues }, StatusCodes.BAD_REQUEST);
+      }
+      console.error(error);
+      return ctx.json({ error: "Internal server error" }, StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 }

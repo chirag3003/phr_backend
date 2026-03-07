@@ -101,6 +101,26 @@ sharedRoutes.get(
   permissionMiddleware({ domain: "documents" }),
   (ctx) => sharedController.getDocuments(ctx),
 );
+sharedRoutes.get(
+  "/:userId/docDoctors",
+  permissionMiddleware({ domain: "documents" }),
+  (ctx) => sharedController.getDocDoctors(ctx),
+);
+sharedRoutes.post(
+  "/:userId/docDoctors",
+  permissionMiddleware({ domain: "documents", requireWrite: true }),
+  (ctx) => sharedController.createDocDoctor(ctx),
+);
+sharedRoutes.put(
+  "/:userId/docDoctors/:id",
+  permissionMiddleware({ domain: "documents", requireWrite: true }),
+  (ctx) => sharedController.updateDocDoctor(ctx),
+);
+sharedRoutes.delete(
+  "/:userId/docDoctors/:id",
+  permissionMiddleware({ domain: "documents", requireWrite: true }),
+  (ctx) => sharedController.deleteDocDoctor(ctx),
+);
 sharedRoutes.post(
   "/:userId/documents",
   permissionMiddleware({ domain: "documents", requireWrite: true }),
@@ -166,6 +186,13 @@ sharedRoutes.get(
   "/:userId/insights/water",
   permissionMiddleware({ domain: "water" }),
   (ctx) => sharedController.getSharedWaterInsights(ctx),
+);
+
+// Summary insights (shared)
+sharedRoutes.post(
+  "/:userId/insights/summary",
+  permissionMiddleware({ domain: "profile" }),
+  (ctx) => sharedController.generateSharedSummary(ctx),
 );
 
 export default sharedRoutes;

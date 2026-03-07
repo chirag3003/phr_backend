@@ -18,7 +18,17 @@ export class DocDoctorService {
     return await DocDoctor.findByIdAndUpdate(id, docDoctor);
   }
 
+  async updateDocDoctorByUser(userId: string, id: string, docDoctor: updateDocDoctorInput) {
+    return await DocDoctor.findOneAndUpdate({ _id: id, userId }, docDoctor, {
+      new: true,
+    });
+  }
+
   async deleteDocDoctor(userId: string, id: string) {
     return await DocDoctor.findByIdAndDelete(id);
+  }
+
+  async deleteDocDoctorByUser(userId: string, id: string) {
+    return await DocDoctor.findOneAndDelete({ _id: id, userId });
   }
 }

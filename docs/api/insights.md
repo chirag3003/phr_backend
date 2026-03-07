@@ -22,8 +22,16 @@ Insights are cached per user per UTC day.
 ## GET `/shared/:userId/insights/glucose`
 Returns cached glucose insights for a shared user (requires glucose permission).
 
+## GET `/shared/:userId/insights/meals`
+Returns cached meal insights for a shared user (requires meals permission).
+
 ## GET `/shared/:userId/insights/water`
 Returns cached water insights for a shared user (requires water permission).
+
+## POST `/shared/:userId/insights/summary`
+Generates a shared user's summary PDF (requires a valid share entry).
+
+Shared summary sections are included only when both the request `include` flag is `true` and the caller has permission for that domain.
 
 Request body:
 ```json
