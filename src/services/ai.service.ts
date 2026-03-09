@@ -18,7 +18,7 @@ export class AiService {
             const prompt = this.createPrompt(data, documentText);
 
             const response = await this.openai.chat.completions.create({
-                model: "gpt-4o",
+                model: "gpt-5.1o",
                 messages: [
                     {
                         role: "system",
@@ -77,7 +77,7 @@ export class AiService {
     }
 
     private createPrompt(data: SummaryData, documentText: string): string {
-        const { profile, glucose, symptoms, meals, dateRange } = data;
+        const { profile, glucose, symptoms, meals, allergies, dateRange } = data;
         const safeText = (value?: string | number | null) => (value ? String(value) : "N/A");
         const formatDate = (value?: Date) =>
             value ? new Date(value).toLocaleDateString() : "N/A";
@@ -96,8 +96,9 @@ export class AiService {
         const glucoseTimeOfDay = this.buildGlucoseTimeOfDayStats(sortedGlucose);
         const mealSummary = this.buildMealSummary(meals);
         const symptomSummary = this.buildSymptomSummary(symptoms);
+        const allergySummary = this.buildAllergySummary(allergies);
 
-        let prompt = `Summary Window: ${formatDate(dateRange?.startDate)} to ${formatDate(dateRange?.endDate)}\n\nPatient Profile:\n- Name: ${safeText(profile?.firstName)} ${safeText(profile?.lastName)}\n- Age: ${profile?.dob ? this.calculateAge(profile.dob) : "N/A"}\n- Sex: ${safeText(profile?.sex)}\n- Diabetes Type: ${safeText(profile?.diabetesType)}\n- Height: ${safeText(profile?.height)} cm\n- Weight: ${safeText(profile?.weight)} kg\n- Blood Type: ${safeText(profile?.bloodType)}\n\nGlucose Summary:\n${glucoseStats}\n\nGlucose Context (by meal timing):\n${glucoseContext}\n\nTime-of-Day Patterns:\n${glucoseTimeOfDay}\n\nMeal Summary:\n${mealSummary}\n\nSymptom Summary:\n${symptomSummary}\n`;
+        let prompt = `Summary Window: ${formatDate(dateRange?.startDate)} to ${formatDate(dateRange?.endDate)}\n\nPatient Profile:\n- Name: ${safeText(profile?.firstName)} ${safeText(profile?.lastName)}\n- Age: ${profile?.dob ? this.calculateAge(profile.dob) : "N/A"}\n- Sex: ${safeText(profile?.sex)}\n- Diabetes Type: ${safeText(profile?.diabetesType)}\n- Height: ${safeText(profile?.height)} cm\n- Weight: ${safeText(profile?.weight)} kg\n- Blood Type: ${safeText(profile?.bloodType)}\n\nAllergies:\n${allergySummary}\n\nGlucose Summary:\n${glucoseStats}\n\nGlucose Context (by meal timing):\n${glucoseContext}\n\nTime-of-Day Patterns:\n${glucoseTimeOfDay}\n\nMeal Summary:\n${mealSummary}\n\nSymptom Summary:\n${symptomSummary}\n`;
 
         if (documentText) {
             prompt += `\nDocument OCR Notes:\n${documentText}\n`;
@@ -118,7 +119,7 @@ export class AiService {
         const avg = values.reduce((sum, val) => sum + val, 0) / values.length;
         const min = Math.min(...values);
         const max = Math.max(...values);
-        const latest = glucose[0];
+        const latest = glucose[0]!;
         const unitLabel = units.size === 1 ? Array.from(units)[0] : "mixed units";
 
         const inRange = glucose.filter((g) => this.isInRange(g.value, g.unit)).length;
@@ -248,6 +249,18 @@ export class AiService {
         return `- Total symptoms: ${symptoms.length}\n- Most frequent: ${topSymptoms || "N/A"}\n- Intensity distribution: ${Object.entries(intensityCounts)
             .map(([key, value]) => `${key} (${value})`)
             .join(", ")}\n- Recent symptoms:\n${recentSymptoms}`;
+    }
+
+    private buildAllergySummary(allergies: SummaryData["allergies"]) {
+        if (allergies.length === 0) {
+            return "- No known allergies.";
+        }
+
+        const allergySummary = allergies
+            .map((allergy) => `- ${allergy.name} (${allergy.severity})${allergy.notes ? `: ${allergy.notes}` : ""}`)
+            .join("\n");
+
+        return `- Total allergies: ${allergies.length}\n${allergySummary}`;
     }
 
     private isInRange(value: number, unit: SummaryData["glucose"][number]["unit"]) {

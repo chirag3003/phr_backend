@@ -28,6 +28,9 @@ export class PdfService {
             // --- Patient Profile ---
             this.generateProfileSection(doc, data);
 
+            // --- Allergies ---
+            this.generateAllergySection(doc, data.allergies);
+
             // --- AI Summary ---
             if (aiSummary) {
                 this.generateAiSummarySection(doc, aiSummary);
@@ -139,6 +142,57 @@ export class PdfService {
         doc.font("Helvetica-Bold").text(`BMI: ${bmi}`, col2X, col1Y + 30).font("Helvetica");
 
         doc.y = startY + 120;
+    }
+
+    private generateAllergySection(doc: PDFKit.PDFDocument, allergies: any[]) {
+        this.checkPageBreak(doc, 150);
+        
+        if (allergies.length === 0) {
+            doc.fillColor(THEME.primary).fontSize(16).font("Helvetica-Bold").text("Allergies").font("Helvetica").moveDown(0.5);
+            doc.fillColor(THEME.text).fontSize(11).text("No known allergies.", { indent: 10 });
+            doc.moveDown(2);
+            return;
+        }
+
+        doc.fillColor(THEME.primary).fontSize(16).font("Helvetica-Bold").text("Allergies").font("Helvetica").moveDown(0.5);
+
+        let currentY = doc.y;
+        this.drawTableHeader(doc, currentY, [
+            { text: "Allergen", x: 60 },
+            { text: "Severity", x: 300 },
+            { text: "Notes", x: 400 }
+        ]);
+        currentY += 20;
+        doc.fillColor(THEME.text).fontSize(9).font("Helvetica");
+
+        allergies.forEach((a, i) => {
+            if (currentY > 700) {
+                doc.addPage();
+                currentY = 50;
+                this.drawTableHeader(doc, currentY, [
+                    { text: "Allergen", x: 60 },
+                    { text: "Severity", x: 300 },
+                    { text: "Notes", x: 400 }
+                ]);
+                currentY += 20;
+                doc.fillColor(THEME.text).fontSize(9).font("Helvetica");
+            }
+
+            // Zebra Striping
+            if (i % 2 === 0) {
+                doc.rect(50, currentY, 495, 20).fill(THEME.secondary);
+                doc.fillColor(THEME.text);
+            }
+
+            doc.text(a.name, 60, currentY + 5, { width: 230, ellipsis: true });
+            doc.text(a.severity, 300, currentY + 5);
+            doc.text(a.notes || "-", 400, currentY + 5, { width: 140, height: 15, ellipsis: true });
+
+            currentY += 20;
+        });
+
+        doc.y = currentY;
+        doc.moveDown(2);
     }
 
     private generateAiSummarySection(doc: PDFKit.PDFDocument, summary: string) {

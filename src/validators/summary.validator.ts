@@ -4,6 +4,7 @@ import type { IGlucose } from "../models/glucose";
 import type { IMeal } from "../models/meal";
 import type { ISymptom } from "../models/symptom";
 import type { IDocument } from "../models/document";
+import type { IAllergy } from "../models/allergy";
 
 export const summaryRequestSchema = z.object({
     startDate: z.string().datetime(),
@@ -24,6 +25,7 @@ export interface SummaryData {
     symptoms: ISymptom[];
     meals: IMeal[];
     documents: IDocument[];
+    allergies: IAllergy[];
     dateRange: {
         startDate: Date;
         endDate: Date;
