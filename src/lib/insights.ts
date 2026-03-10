@@ -27,7 +27,7 @@ async function callOpenAI(prompt: string, systemPrompt: string): Promise<string>
         { role: "system", content: systemPrompt },
         { role: "user", content: prompt },
       ],
-      max_tokens: 1500,
+      max_completion_tokens: 1500,
       temperature: 0.7,
     }),
   });

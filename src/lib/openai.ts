@@ -61,7 +61,7 @@ Be realistic with nutritional estimates based on typical portion sizes. If you c
           ],
         },
       ],
-      max_tokens: 500,
+      max_completion_tokens: 500,
     }),
   });
 
