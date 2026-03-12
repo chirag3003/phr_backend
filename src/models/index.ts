@@ -11,6 +11,7 @@ export { default as FamilyPermission } from './familyPermission';
 export { default as Glucose } from './glucose';
 export { default as Water } from './water';
 export { default as Insight } from './insight';
+export { default as Steps } from './steps';
 
 // Export interfaces
 export type { IProfile } from './profile';
@@ -24,3 +25,4 @@ export type { IFamilyPermission } from './familyPermission';
 export type { IGlucose } from './glucose';
 export type { IWater } from './water';
 export type { IInsight } from './insight';
+export type { ISteps } from './steps';

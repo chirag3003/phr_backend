@@ -32,6 +32,21 @@ export class InsightsController {
       );
     }
   }
+
+  async getActivityInsights(ctx: Context) {
+    try {
+      const userId = ctx.get("userId");
+      const insights = await insightsService.getActivityInsights(userId);
+      return ctx.json(insights, StatusCodes.OK);
+    } catch (error: any) {
+      console.error("Error generating activity insights:", error);
+      return ctx.json(
+        { error: error.message || "Failed to generate activity insights" },
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
   async generateSummary(ctx: Context) {
     try {
       const userId = ctx.get("userId");

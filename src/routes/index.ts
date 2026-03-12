@@ -12,6 +12,7 @@ import insightsRoutes from "./insights.routes";
 import docDoctorRoutes from "./docDoctor.routes";
 import waterRoutes from "./water.routes";
 import sharedRoutes from "./shared.routes";
+import stepsRoutes from "./steps.routes";
 
 const app = new Hono();
 
@@ -28,5 +29,6 @@ app.route("/insights", insightsRoutes);
 app.route("/docDoctors", docDoctorRoutes);
 app.route("/water", waterRoutes);
 app.route("/shared", sharedRoutes);
+app.route("/steps", stepsRoutes);
 
 export default app;

@@ -2,9 +2,11 @@ import {
   mealInsightsResponseSchema,
   glucoseInsightsResponseSchema,
   waterInsightsResponseSchema,
+  activityInsightsResponseSchema,
   type MealInsightsResponse,
   type GlucoseInsightsResponse,
   type WaterInsightsResponse,
+  type ActivityInsightsResponse,
   type UserDataForInsights,
 } from "../validators";
 
@@ -73,6 +75,11 @@ Focus on actionable advice that helps manage blood sugar levels through diet.`;
 
   const recentMeals = userData.meals.slice(0, 20);
   const recentGlucose = userData.glucoseReadings.slice(0, 10);
+  const recentSteps = userData.stepRecords?.slice(0, 20) || [];
+
+  // Calculate average daily steps
+  const stepCounts = recentSteps.map((s) => s.stepCount);
+  const avgDailySteps = stepCounts.length > 0 ? Math.round(stepCounts.reduce((a, b) => a + b, 0) / stepCounts.length) : 0;
 
   const prompt = `Analyze this diabetes patient's meal data and provide insights and tips.
 
@@ -114,6 +121,14 @@ ${
     : "No glucose readings"
 }
 
+${
+  avgDailySteps > 0
+    ? `ACTIVITY DATA (Average daily steps: ${avgDailySteps}):
+Note: Higher daily activity (${avgDailySteps}+ steps) allows for more flexible carbohydrate intake and improved glucose tolerance.
+Consider adjusting meal portions based on activity level for better glucose management.`
+    : ""
+}
+
 RECENT SYMPTOMS:
 ${userData.symptoms.slice(0, 5).map((s) => `- ${s.symptomName} (${s.intensity}) - ${new Date(s.dateRecorded).toLocaleDateString()}`).join("\n") || "None reported"}
 
@@ -133,7 +148,8 @@ Provide max 3 insights and max 3 tips and return empty array if nothing is found
 - Protein and fiber intake for blood sugar stability
 - Meal timing patterns
 - Foods that may be beneficial or harmful for their diabetes type
-- Correlation between meals and any symptoms`;
+- Correlation between meals and any symptoms
+- Activity-adjusted carbohydrate recommendations (if activity data available)`;
 
   const content = await callOpenAI(prompt, systemPrompt);
 
@@ -156,6 +172,7 @@ Be encouraging but flag any concerning patterns that need attention.`;
   const recentGlucose = userData.glucoseReadings.slice(0, 30);
   const recentMeals = userData.meals.slice(0, 15);
   const recentSymptoms = userData.symptoms.slice(0, 10);
+  const recentSteps = userData.stepRecords?.slice(0, 30) || [];
 
   const glucoseValues = recentGlucose.map((g) => g.value);
   const avgGlucose = glucoseValues.length > 0 ? Math.round(glucoseValues.reduce((a, b) => a + b, 0) / glucoseValues.length) : 0;
@@ -210,6 +227,15 @@ ${
     : "No meals recorded"
 }
 
+${
+  recentSteps.length > 0
+    ? `ACTIVITY DATA (Last ${recentSteps.length} days):
+${recentSteps.map((s) => `- ${new Date(s.dateRecorded).toLocaleDateString()}: ${s.stepCount} steps`).join("\n")}
+
+Note: Higher activity levels can lower glucose spikes and improve overall glucose stability.`
+    : ""
+}
+
 ALLERGIES:
 ${userData.allergies.length > 0 ? userData.allergies.map((a) => `- ${a.name} (${a.severity})`).join("\n") : "None reported"}
 
@@ -246,7 +272,8 @@ Provide max 2 insights, max 2 patterns, and max 2 tips. Focus on:
 - Correlation between symptoms and glucose levels
 - Fasting vs post-meal glucose differences
 - Trends over time (improving or worsening control)
-- Specific meal types that may be causing spikes`;
+- Specific meal types that may be causing spikes
+- Impact of activity level on glucose stability (if activity data available)`;
 
   const content = await callOpenAI(prompt, systemPrompt);
 
@@ -326,4 +353,128 @@ Provide max 3 insights and max 3 tips and return empty arrays if nothing is foun
 
   const parsed = JSON.parse(jsonMatch[0]);
   return waterInsightsResponseSchema.parse(parsed);
+}
+
+export async function generateActivityInsights(userData: UserDataForInsights): Promise<ActivityInsightsResponse> {
+  const systemPrompt = `You are an activity and wellness coach specialized in diabetes management. 
+You analyze physical activity patterns (step counts) and correlate them with glucose control and meal patterns.
+Always return valid JSON matching the exact schema provided.
+Focus on how physical activity impacts blood sugar management and provide actionable recommendations.`;
+
+  const recentSteps = userData.stepRecords?.slice(0, 30) || [];
+  const recentGlucose = userData.glucoseReadings.slice(0, 20);
+  const recentMeals = userData.meals.slice(0, 15);
+
+  // Calculate activity statistics
+  const stepCounts = recentSteps.map((s) => s.stepCount);
+  const avgSteps = stepCounts.length > 0 ? Math.round(stepCounts.reduce((a, b) => a + b, 0) / stepCounts.length) : 0;
+  const maxSteps = stepCounts.length > 0 ? Math.max(...stepCounts) : 0;
+  const minSteps = stepCounts.length > 0 ? Math.min(...stepCounts) : 0;
+
+  // Calculate average glucose on high activity vs low activity days
+  const highActivityThreshold = avgSteps * 1.2; // 20% above average
+  const lowActivityThreshold = avgSteps * 0.8; // 20% below average
+
+  const highActivityDays = recentSteps
+    .filter((s) => s.stepCount >= highActivityThreshold)
+    .map((s) => new Date(s.dateRecorded).toDateString());
+
+  const lowActivityDays = recentSteps
+    .filter((s) => s.stepCount <= lowActivityThreshold)
+    .map((s) => new Date(s.dateRecorded).toDateString());
+
+  const highActivityGlucose = recentGlucose
+    .filter((g) => highActivityDays.includes(new Date(g.dateRecorded).toDateString()))
+    .map((g) => g.value);
+
+  const lowActivityGlucose = recentGlucose
+    .filter((g) => lowActivityDays.includes(new Date(g.dateRecorded).toDateString()))
+    .map((g) => g.value);
+
+  const avgGlucoseHighActivity = highActivityGlucose.length > 0 ? Math.round(highActivityGlucose.reduce((a, b) => a + b, 0) / highActivityGlucose.length) : 0;
+  const avgGlucoseLowActivity = lowActivityGlucose.length > 0 ? Math.round(lowActivityGlucose.reduce((a, b) => a + b, 0) / lowActivityGlucose.length) : 0;
+
+  const prompt = `Analyze this diabetes patient's physical activity data and provide insights about how activity affects their health.
+
+PATIENT PROFILE:
+${
+  userData.profile
+    ? `
+- Diabetes Type: ${userData.profile.diabetesType || "Not specified"}
+- Age: ${userData.profile.dob ? calculateAge(userData.profile.dob) : "Unknown"}
+- Sex: ${userData.profile.sex || "Not specified"}
+- Height: ${userData.profile.height || "Unknown"} cm
+- Weight: ${userData.profile.weight || "Unknown"} kg
+- BMI: ${userData.profile.height && userData.profile.weight ? calculateBMI(userData.profile.height, userData.profile.weight) : "Unknown"}
+`
+    : "No profile data available"
+}
+
+ACTIVITY STATISTICS (Last ${recentSteps.length} days):
+- Average steps/day: ${avgSteps}
+- Max steps/day: ${maxSteps}
+- Min steps/day: ${minSteps}
+- High activity days (${highActivityThreshold}+ steps): ${highActivityDays.length} days
+- Low activity days (${lowActivityThreshold} or fewer steps): ${lowActivityDays.length} days
+
+GLUCOSE CORRELATION:
+- Average glucose on high activity days: ${avgGlucoseHighActivity} mg/dL (${highActivityGlucose.length} readings)
+- Average glucose on low activity days: ${avgGlucoseLowActivity} mg/dL (${lowActivityGlucose.length} readings)
+- Difference: ${Math.abs(avgGlucoseHighActivity - avgGlucoseLowActivity)} mg/dL (${avgGlucoseHighActivity < avgGlucoseLowActivity ? "activity helpful" : "activity may need adjustment"})
+
+RECENT ACTIVITY DATA (Last ${recentSteps.length} days):
+${
+  recentSteps.length > 0
+    ? recentSteps
+        .map((s) => `- ${new Date(s.dateRecorded).toLocaleDateString()}: ${s.stepCount} steps (${s.source})`)
+        .join("\n")
+    : "No step data recorded"
+}
+
+RECENT GLUCOSE READINGS:
+${
+  recentGlucose.length > 0
+    ? recentGlucose
+        .map((g) => `- ${g.value} ${g.unit} - ${new Date(g.dateRecorded).toLocaleDateString()}`)
+        .join("\n")
+    : "No glucose readings"
+}
+
+Return ONLY valid JSON with this exact structure:
+{
+  "insights": [
+    { "title": "Short insight title", "description": "Detailed explanation", "type": "positive|warning|info" }
+  ],
+  "patterns": [
+    { "pattern": "Identified activity pattern", "frequency": "How often it occurs", "recommendation": "What to do about it" }
+  ],
+  "tips": [
+    { "title": "Tip title", "description": "Actionable advice", "priority": "high|medium|low" }
+  ],
+  "summary": "Brief overall summary of activity levels and their impact on health",
+  "averageStepsPerDay": ${avgSteps},
+  "weeklyTrend": "Trend description (improving, stable, declining, variable)"
+}
+
+Provide max 2 insights, max 2 patterns, and max 2 tips. Focus on:
+- Consistency of daily activity
+- Impact of activity on glucose control
+- Weekly patterns and trends
+- Recommendations to improve activity levels
+- How increased activity might help glucose management
+- Days with notable activity changes and their glucose impact`;
+
+  const content = await callOpenAI(prompt, systemPrompt);
+
+  const jsonMatch = content.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) {
+    throw new Error("Could not parse JSON from OpenAI response");
+  }
+
+  const parsed = JSON.parse(jsonMatch[0]);
+  return activityInsightsResponseSchema.parse({
+    ...parsed,
+    averageStepsPerDay: avgSteps,
+    weeklyTrend: parsed.weeklyTrend || "Unable to determine trend",
+  });
 }

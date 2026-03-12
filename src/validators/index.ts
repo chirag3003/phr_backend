@@ -9,3 +9,4 @@ export * from './upload.schema';
 export * from './glucose.schema';
 export * from './insights.schema';
 export * from './water.schema';
+export * from './steps.schema';

@@ -5,9 +5,10 @@ import { SymptomService } from "./symptom.service";
 import { GlucoseService } from "./glucose.service";
 import { DocumentService } from "./document.service";
 import { WaterService } from "./water.service";
+import { StepsService } from "./steps.service";
 import { Insight } from "../models";
-import { generateMealInsights, generateGlucoseInsights } from "../lib/insights";
-import type { MealInsightsResponse, GlucoseInsightsResponse, UserDataForInsights } from "../validators";
+import { generateMealInsights, generateGlucoseInsights, generateActivityInsights } from "../lib/insights";
+import type { MealInsightsResponse, GlucoseInsightsResponse, ActivityInsightsResponse, UserDataForInsights } from "../validators";
 import { getUtcDateKey } from "../utils/date";
 
 export class InsightsService {
@@ -18,6 +19,7 @@ export class InsightsService {
   private glucoseService: GlucoseService;
   private documentService: DocumentService;
   private waterService: WaterService;
+  private stepsService: StepsService;
 
   constructor() {
     this.profileService = new ProfileService();
@@ -27,16 +29,18 @@ export class InsightsService {
     this.glucoseService = new GlucoseService();
     this.documentService = new DocumentService();
     this.waterService = new WaterService();
+    this.stepsService = new StepsService();
   }
 
   private async gatherUserData(userId: string): Promise<UserDataForInsights> {
-    const [profile, allergies, meals, symptoms, glucoseReadings, waterRecords] = await Promise.all([
+    const [profile, allergies, meals, symptoms, glucoseReadings, waterRecords, stepRecords] = await Promise.all([
       this.profileService.getProfile(userId),
       this.allergyService.getAllergies(userId),
       this.mealService.getMeals(userId),
       this.symptomService.getSymptoms(userId),
       this.glucoseService.getGlucoseReadings(userId),
       this.waterService.getWaterByUserId(userId),
+      this.stepsService.getSteps(userId),
     ]);
 
     return {
@@ -86,6 +90,11 @@ export class InsightsService {
         mealContext: g.mealContext,
         notes: g.notes,
       })),
+      stepRecords: stepRecords.map((s) => ({
+        dateRecorded: s.dateRecorded,
+        stepCount: s.stepCount,
+        source: s.source,
+      })),
     };
   }
 
@@ -134,5 +143,18 @@ export class InsightsService {
       allergies,
       dateRange: { startDate, endDate }
     };
+  }
+
+  async getActivityInsights(userId: string): Promise<ActivityInsightsResponse> {
+    const dateKey = getUtcDateKey();
+    const existing = await Insight.findOne({ userId, type: "activity", dateKey });
+    if (existing) {
+      return existing.payload as ActivityInsightsResponse;
+    }
+
+    const userData = await this.gatherUserData(userId);
+    const payload = await generateActivityInsights(userData);
+    await Insight.create({ userId, type: "activity", dateKey, payload });
+    return payload;
   }
 }

@@ -77,6 +77,39 @@ export type WaterInsight = z.infer<typeof waterInsightSchema>;
 export type WaterTip = z.infer<typeof waterTipSchema>;
 export type WaterInsightsResponse = z.infer<typeof waterInsightsResponseSchema>;
 
+// Activity Insights Schema
+export const activityInsightSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  type: z.enum(["positive", "warning", "info"]),
+});
+
+export const activityPatternSchema = z.object({
+  pattern: z.string(),
+  frequency: z.string(),
+  recommendation: z.string(),
+});
+
+export const activityTipSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  priority: z.enum(["high", "medium", "low"]),
+});
+
+export const activityInsightsResponseSchema = z.object({
+  insights: z.array(activityInsightSchema),
+  patterns: z.array(activityPatternSchema),
+  tips: z.array(activityTipSchema),
+  summary: z.string(),
+  averageStepsPerDay: z.number(),
+  weeklyTrend: z.string(),
+});
+
+export type ActivityInsight = z.infer<typeof activityInsightSchema>;
+export type ActivityPattern = z.infer<typeof activityPatternSchema>;
+export type ActivityTip = z.infer<typeof activityTipSchema>;
+export type ActivityInsightsResponse = z.infer<typeof activityInsightsResponseSchema>;
+
 // User Data for Insights Generation
 export const userDataForInsightsSchema = z.object({
   profile: z.object({
@@ -129,6 +162,11 @@ export const userDataForInsightsSchema = z.object({
     mealContext: z.string().optional(),
     notes: z.string().optional(),
   })),
+  stepRecords: z.array(z.object({
+    dateRecorded: z.coerce.date(),
+    stepCount: z.number(),
+    source: z.string(),
+  })).optional(),
 });
 
 export type UserDataForInsights = z.infer<typeof userDataForInsightsSchema>;
