@@ -7,8 +7,10 @@ Backend API for a diabetes-focused personal health record (PHR) app. It supports
 - Water intake tracking
 - Meal logging and AI meal image analysis
 - Symptoms and allergies tracking
+- **Step tracking with Apple HealthKit integration (NEW)**
+- **Activity-based health insights (NEW)**
 - Document storage (prescriptions/reports)
-- AI insights for meals and glucose
+- AI insights for meals, glucose, and activity
 - PDF health summaries
 - Family sharing with granular permissions
 
@@ -49,6 +51,9 @@ Optional:
 - API overview: `docs/architecture/api-overview.md`
 - API docs index: `docs/api/overview.md`
 - Architecture: `docs/architecture/overview.md`
+- Activity Insights: `docs/architecture/activity-insights.md` (NEW)
+- Steps API: `docs/api/steps.md` (NEW)
+- Quick Reference: `docs/STEPS_QUICK_REFERENCE.md` (NEW)
 - Storage: `docs/architecture/storage.md`
 - AI pipeline: `docs/architecture/ai.md`
 - Diagrams: `docs/diagrams/er_diagram.mermaid`
