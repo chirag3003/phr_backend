@@ -17,6 +17,7 @@ Start here, then drill into each feature.
 - `docs/api/symptoms.md`
 - `docs/api/allergies.md`
 - `docs/api/water.md`
+- `docs/api/steps.md` (NEW - Apple HealthKit integration)
 
 ## Sharing
 - `docs/api/shared.md`
