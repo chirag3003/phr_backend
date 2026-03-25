@@ -30,7 +30,7 @@ async function callOpenAI(prompt: string, systemPrompt: string): Promise<string>
         { role: "user", content: prompt },
       ],
       max_completion_tokens: 1500,
-      temperature: 0.7,
+      temperature: 1,
     }),
   });
 
