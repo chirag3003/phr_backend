@@ -24,13 +24,13 @@ async function callOpenAI(prompt: string, systemPrompt: string): Promise<string>
       Authorization: `Bearer ${OPENAI_API_KEY}`,
     },
     body: JSON.stringify({
-      model: "gpt-5-nano",
+      model: "gpt-5.4-mini",
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: prompt },
       ],
       max_completion_tokens: 1500,
-      temperature: 1,
+      temperature: 0.7,
     }),
   });
 
