@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-export type InsightType = "meal" | "glucose" | "water";
+export type InsightType = "meal" | "glucose" | "water" | "activity";
 
 export interface IInsight extends Document {
   userId: mongoose.Types.ObjectId;
@@ -21,7 +21,7 @@ const insightSchema = new Schema<IInsight>(
     type: {
       type: String,
       required: true,
-      enum: ["meal", "glucose", "water"],
+      enum: ["meal", "glucose", "water", "activity"],
     },
     dateKey: {
       type: String,
