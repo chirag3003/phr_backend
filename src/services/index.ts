@@ -11,3 +11,4 @@ export { WaterService } from './water.service';
 export { WaterInsightsService } from './waterInsights.service';
 export { InsightsService } from './insights.service';
 export { DocDoctorService } from './docDoctor.service';
+export { StepsService } from './steps.service';
