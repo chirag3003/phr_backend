@@ -43,7 +43,7 @@ Be realistic with nutritional estimates based on typical portion sizes. If you c
       Authorization: `Bearer ${OPENAI_API_KEY}`,
     },
     body: JSON.stringify({
-      model: "gpt-5-nano",
+      model: "gpt-5-mini",
       messages: [
         {
           role: "user",
@@ -75,6 +75,7 @@ Be realistic with nutritional estimates based on typical portion sizes. If you c
   const content = data.choices[0]?.message?.content;
 
   if (!content) {
+    console.log(response,"Response")
     throw new Error("No response from OpenAI");
   }
 
