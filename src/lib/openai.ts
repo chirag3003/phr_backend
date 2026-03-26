@@ -75,7 +75,7 @@ Be realistic with nutritional estimates based on typical portion sizes. If you c
   const content = data.choices[0]?.message?.content;
 
   if (!content) {
-    console.log(data,"Response")
+    console.log(data.choices[0],"Response")
     throw new Error("No response from OpenAI");
   }
 
