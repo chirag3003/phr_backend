@@ -43,7 +43,7 @@ Be realistic with nutritional estimates based on typical portion sizes. If you c
       Authorization: `Bearer ${OPENAI_API_KEY}`,
     },
     body: JSON.stringify({
-      model: "gpt-5-mini",
+      model: "gpt-4o-mini",
       messages: [
         {
           role: "user",
@@ -56,12 +56,14 @@ Be realistic with nutritional estimates based on typical portion sizes. If you c
               type: "image_url",
               image_url: {
                 url: `data:${mimeType};base64,${imageBase64}`,
+                detail: "low",
               },
             },
           ],
         },
       ],
-      max_completion_tokens: 500,
+      response_format: { type: "json_object" },
+      max_completion_tokens: 1000,
     }),
   });
 
