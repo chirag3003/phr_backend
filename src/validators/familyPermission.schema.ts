@@ -12,6 +12,7 @@ export const familyPermissionSchema = z.object({
     glucose: z.boolean(),
     allergies: z.boolean(),
     water: z.boolean(),
+    steps: z.boolean(),
   }),
 });
 

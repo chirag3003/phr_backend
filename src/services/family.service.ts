@@ -101,6 +101,15 @@ export class FamilyService {
     return await FamilyPermission.create({
       userId,
       permissionTo,
+      permissions: {
+        documents: false,
+        symptoms: false,
+        meals: false,
+        glucose: false,
+        allergies: true,
+        water: false,
+        steps: false,
+      },
     });
   }
 
@@ -117,6 +126,7 @@ export class FamilyService {
       {
         $set: data,
       },
+      { new: true },
     );
   }
 
