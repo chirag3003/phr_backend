@@ -12,6 +12,7 @@ import {
   UploadService,
   WaterInsightsService,
   DocDoctorService,
+  StepsService,
 } from "../services";
 import {
   createAllergySchema,
@@ -43,6 +44,7 @@ const insightsService = new InsightsService();
 const uploadService = new UploadService();
 const waterInsightsService = new WaterInsightsService();
 const docDoctorService = new DocDoctorService();
+const stepsService = new StepsService();
 
 export class SharedController {
   async getProfile(ctx: Context) {
@@ -453,6 +455,28 @@ export class SharedController {
     }
   }
 
+  async getSharedSteps(ctx: Context) {
+    try {
+      const targetUserId = ctx.get("targetUserId");
+      const steps = await stepsService.getSteps(targetUserId);
+      return ctx.json(steps, StatusCodes.OK);
+    } catch (error) {
+      console.error(error);
+      return ctx.json({}, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async getSharedActivityInsights(ctx: Context) {
+    try {
+      const targetUserId = ctx.get("targetUserId");
+      const insights = await insightsService.getActivityInsights(targetUserId);
+      return ctx.json(insights, StatusCodes.OK);
+    } catch (error) {
+      console.error(error);
+      return ctx.json({}, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
+
   async generateSharedSummary(ctx: Context) {
     try {
       const requesterId = ctx.get("userId");
@@ -476,12 +500,14 @@ export class SharedController {
         symptoms: Boolean(include.symptoms && permissions?.symptoms),
         meals: Boolean(include.meals && permissions?.meals),
         documents: Boolean(include.documents && permissions?.documents),
+        steps: Boolean(include.steps && permissions?.steps),
       };
 
       if (!effectiveInclude.glucose) data.glucose = [];
       if (!effectiveInclude.symptoms) data.symptoms = [];
       if (!effectiveInclude.meals) data.meals = [];
       if (!effectiveInclude.documents) data.documents = [];
+      if (!effectiveInclude.steps) (data as any).steps = [];
 
       const { AiService } = await import("../services/ai.service");
       const aiService = new AiService();

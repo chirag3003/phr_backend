@@ -188,6 +188,20 @@ sharedRoutes.get(
   (ctx) => sharedController.getSharedWaterInsights(ctx),
 );
 
+// Steps
+sharedRoutes.get(
+  "/:userId/steps",
+  permissionMiddleware({ domain: "steps" }),
+  (ctx) => sharedController.getSharedSteps(ctx),
+);
+
+// Activity insights (shared)
+sharedRoutes.get(
+  "/:userId/insights/activity",
+  permissionMiddleware({ domain: "steps" }),
+  (ctx) => sharedController.getSharedActivityInsights(ctx),
+);
+
 // Summary insights (shared)
 sharedRoutes.post(
   "/:userId/insights/summary",

@@ -125,13 +125,14 @@ export class InsightsService {
   }
 
   async getSummaryData(userId: string, startDate: Date, endDate: Date) {
-    const [profile, glucose, symptoms, meals, documents, allergies] = await Promise.all([
+    const [profile, glucose, symptoms, meals, documents, allergies, steps] = await Promise.all([
       this.profileService.getProfile(userId),
       this.glucoseService.getGlucoseByDateRange(userId, startDate, endDate),
       this.symptomService.getSymptomsByDateRange(userId, startDate, endDate),
       this.mealService.getMealsByDateRange(userId, startDate, endDate),
       this.documentService.getDocumentsByDateRange(userId, startDate, endDate),
       this.allergyService.getAllergies(userId),
+      this.stepsService.getStepsByDateRange(userId, startDate, endDate),
     ]);
 
     return {
@@ -141,6 +142,7 @@ export class InsightsService {
       meals,
       documents,
       allergies,
+      steps,
       dateRange: { startDate, endDate }
     };
   }

@@ -9,7 +9,8 @@ export type PermissionDomain =
   | "symptoms"
   | "documents"
   | "allergies"
-  | "water";
+  | "water"
+  | "steps";
 
 type PermissionOptions = {
   domain: PermissionDomain;
