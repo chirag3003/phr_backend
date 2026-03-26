@@ -19,7 +19,7 @@ export async function analyzeMealImage(imageBase64: string, mimeType: string): P
   if (!OPENAI_API_KEY) {
     throw new Error("OPENAI_API_KEY is not set");
   }
-
+  console.log("Image length", imageBase64.length)
   const prompt = `Analyze this food/meal image and provide nutritional information in JSON format.
 
 Return ONLY a valid JSON object with these exact fields:
@@ -75,7 +75,7 @@ Be realistic with nutritional estimates based on typical portion sizes. If you c
   const content = data.choices[0]?.message?.content;
 
   if (!content) {
-    console.log(response,"Response")
+    console.log(data,"Response")
     throw new Error("No response from OpenAI");
   }
 
